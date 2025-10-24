@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkWork - 数字游民社区</title>
+    <style>
+        /* Telegram 原生设计系统 */
+        :root {
+            /* Telegram 标准颜色 */
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-secondary-bg-color: #f1f1f1;
+            --tg-theme-text-color: #000000;
+            --tg-theme-hint-color: #999999;
+            --tg-theme-link-color: #2481cc;
+            --tg-theme-button-color: #2481cc;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-header-bg-color: #2481cc;
+            --tg-theme-accent-text-color: #2481cc;
+            --tg-theme-section-bg-color: #ffffff;
+            --tg-theme-section-header-text-color: #6d6d72;
+            --tg-theme-subtitle-text-color: #999999;
+            --tg-theme-destructive-text-color: #ff3b30;
+            
+            /* Telegram 字体 */
+            --tg-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            
+            /* Telegram 间距 */
+            --tg-spacing-xs: 4px;
+            --tg-spacing-s: 8px;
+            --tg-spacing-m: 12px;
+            --tg-spacing-l: 16px;
+            --tg-spacing-xl: 20px;
+            --tg-spacing-xxl: 24px;
+            
+            /* Telegram 圆角 */
+            --tg-border-radius-s: 6px;
+            --tg-border-radius-m: 10px;
+            --tg-border-radius-l: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--tg-font-family);
+            background-color: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-text-color);
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        
+        .container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: var(--tg-theme-bg-color);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Telegram 标准头部 */
+        .tg-header {
+            background: var(--tg-theme-header-bg-color);
+            color: var(--tg-theme-button-text-color);
+            padding: var(--tg-spacing-l);
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+        }
+        
+        .tg-header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        /* Telegram 消息样式的登录提示 */
+        .tg-message {
+            background: var(--tg-theme-section-bg-color);
+            margin: var(--tg-spacing-l);
+            padding: var(--tg-spacing-l);
+            border-radius: var(--tg-border-radius-l);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .tg-message-text {
+            color: var(--tg-theme-text-color);
+            margin-bottom: var(--tg-spacing-m);
+            font-size: 15px;
+        }
+        
+        /* Telegram 标准按钮 */
+        .tg-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--tg-spacing-m) var(--tg-spacing-l);
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: var(--tg-border-radius-s);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-decoration: none;
+            min-height: 44px;
+        }
+        
+        .tg-button:active {
+            opacity: 0.7;
+        }
+        
+        .tg-button-secondary {
+            background: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-link-color);
+        }
+        
+        .tg-button-group {
+            display: flex;
+            gap: var(--tg-spacing-s);
+        }
+        
+        .tg-button-group .tg-button {
+            flex: 1;
+        }
+        
+        /* Telegram 分段控制器 */
+        .tg-segmented-control {
+            display: flex;
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: var(--tg-border-radius-s);
+            padding: 2px;
+            margin: var(--tg-spacing-l);
+        }
+        
+        .tg-segment {
+            flex: 1;
+            padding: var(--tg-spacing-s) var(--tg-spacing-m);
+            text-align: center;
+            border-radius: var(--tg-border-radius-s);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--tg-theme-hint-color);
+        }
+        
+        .tg-segment.active {
+            background: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        /* Telegram 列表样式 */
+        .tg-list {
+            background: var(--tg-theme-section-bg-color);
+            margin: var(--tg-spacing-l);
+            border-radius: var(--tg-border-radius-l);
+            overflow: hidden;
+        }
+        
+        .tg-list-item {
+            padding: var(--tg-spacing-l);
+            border-bottom: 0.5px solid var(--tg-theme-secondary-bg-color);
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .tg-list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tg-list-item:active {
+            background-color: var(--tg-theme-secondary-bg-color);
+        }
+        
+        /* Telegram 头像 */
+        .tg-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--tg-theme-link-color);
+            margin-right: var(--tg-spacing-m);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .tg-avatar-large {
+            width: 64px;
+            height: 64px;
+            font-size: 24px;
+        }
+        
+        /* Telegram 文本样式 */
+        .tg-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .tg-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--tg-theme-text-color);
+            margin-bottom: 2px;
+            line-height: 1.3;
+        }
+        
+        .tg-subtitle {
+            font-size: 14px;
+            color: var(--tg-theme-subtitle-text-color);
+            line-height: 1.3;
+        }
+        
+        .tg-caption {
+            font-size: 13px;
+            color: var(--tg-theme-hint-color);
+            margin-top: var(--tg-spacing-xs);
+        }
+        
+        .tg-body {
+            font-size: 15px;
+            color: var(--tg-theme-text-color);
+            line-height: 1.4;
+            margin: var(--tg-spacing-s) 0;
+        }
+        
+        /* Telegram 标签 */
+        .tg-badge {
+            background: var(--tg-theme-link-color);
+            color: var(--tg-theme-button-text-color);
+            padding: 2px var(--tg-spacing-s);
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: var(--tg-spacing-s);
+        }
+        
+        /* Telegram 操作按钮 */
+        .tg-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--tg-spacing-l);
+            margin-top: var(--tg-spacing-s);
+        }
+        
+        .tg-action {
+            display: flex;
+            align-items: center;
+            gap: var(--tg-spacing-xs);
+            color: var(--tg-theme-hint-color);
+            font-size: 13px;
+            cursor: pointer;
+            padding: var(--tg-spacing-xs);
+            border-radius: var(--tg-border-radius-s);
+            transition: background-color 0.2s;
+        }
+        
+        .tg-action:active {
+            background-color: var(--tg-theme-secondary-bg-color);
+        }
+        
+        .tg-action-primary {
+            color: var(--tg-theme-link-color);
+        }
+        
+        /* Telegram 底部导航 */
+        .tg-tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 375px;
+            background: var(--tg-theme-bg-color);
+            border-top: 0.5px solid var(--tg-theme-secondary-bg-color);
+            display: flex;
+            padding: var(--tg-spacing-s) 0;
+            backdrop-filter: blur(20px);
+        }
+        
+        .tg-tab {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--tg-spacing-s);
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .tg-tab:active {
+            opacity: 0.7;
+        }
+        
+        .tg-tab-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--tg-theme-hint-color);
+            border-radius: 4px;
+            margin-bottom: var(--tg-spacing-xs);
+        }
+        
+        .tg-tab.active .tg-tab-icon {
+            background: var(--tg-theme-link-color);
+        }
+        
+        .tg-tab-label {
+            font-size: 10px;
+            color: var(--tg-theme-hint-color);
+            font-weight: 500;
+        }
+        
+        .tg-tab.active .tg-tab-label {
+            color: var(--tg-theme-link-color);
+        }
+        
+        /* Telegram 浮动按钮 */
+        .tg-fab {
+            position: fixed;
+            bottom: 80px;
+            right: var(--tg-spacing-l);
+            width: 56px;
+            height: 56px;
+            background: var(--tg-theme-button-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--tg-theme-button-text-color);
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(36, 129, 204, 0.3);
+            transition: transform 0.2s;
+        }
+        
+        .tg-fab:active {
+            transform: scale(0.95);
+        }
+        
+        /* 页面切换 */
+        .page {
+            display: none;
+            padding-bottom: 80px;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Telegram 网格布局 */
+        .tg-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--tg-spacing-l);
+            padding: var(--tg-spacing-l);
+        }
+        
+        .tg-grid-item {
+            background: var(--tg-theme-section-bg-color);
+            border-radius: var(--tg-border-radius-l);
+            padding: var(--tg-spacing-l);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .tg-grid-item:active {
+            transform: scale(0.95);
+        }
+        
+        .tg-grid-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--tg-theme-link-color);
+            border-radius: var(--tg-border-radius-m);
+            margin: 0 auto var(--tg-spacing-s);
+        }
+        
+        .tg-grid-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--tg-theme-text-color);
+            margin-bottom: var(--tg-spacing-xs);
+        }
+        
+        .tg-grid-subtitle {
+            font-size: 11px;
+            color: var(--tg-theme-hint-color);
+        }
+        
+        /* Telegram 表单 */
+        .tg-form {
+            padding: var(--tg-spacing-l);
+        }
+        
+        .tg-form-section {
+            background: var(--tg-theme-section-bg-color);
+            border-radius: var(--tg-border-radius-l);
+            margin-bottom: var(--tg-spacing-l);
+            overflow: hidden;
+        }
+        
+        .tg-form-header {
+            padding: var(--tg-spacing-m) var(--tg-spacing-l);
+            background: var(--tg-theme-secondary-bg-color);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--tg-theme-section-header-text-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .tg-input {
+            width: 100%;
+            padding: var(--tg-spacing-l);
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: var(--tg-theme-text-color);
+            border-bottom: 0.5px solid var(--tg-theme-secondary-bg-color);
+        }
+        
+        .tg-input:last-child {
+            border-bottom: none;
+        }
+        
+        .tg-input:focus {
+            outline: none;
+        }
+        
+        .tg-textarea {
+            width: 100%;
+            padding: var(--tg-spacing-l);
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: var(--tg-theme-text-color);
+            min-height: 100px;
+            resize: vertical;
+            font-family: var(--tg-font-family);
+        }
+        
+        .tg-textarea:focus {
+            outline: none;
+        }
+        
+        /* Telegram 统计卡片 */
+        .tg-stats {
+            display: flex;
+            background: var(--tg-theme-section-bg-color);
+            margin: var(--tg-spacing-l);
+            border-radius: var(--tg-border-radius-l);
+            overflow: hidden;
+        }
+        
+        .tg-stat {
+            flex: 1;
+            padding: var(--tg-spacing-l);
+            text-align: center;
+            border-right: 0.5px solid var(--tg-theme-secondary-bg-color);
+        }
+        
+        .tg-stat:last-child {
+            border-right: none;
+        }
+        
+        .tg-stat-number {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--tg-theme-link-color);
+            margin-bottom: var(--tg-spacing-xs);
+        }
+        
+        .tg-stat-label {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color);
+            font-weight: 500;
+        }
+        
+        /* 深色模式支持 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --tg-theme-bg-color: #1c1c1e;
+                --tg-theme-secondary-bg-color: #2c2c2e;
+                --tg-theme-text-color: #ffffff;
+                --tg-theme-hint-color: #8e8e93;
+                --tg-theme-link-color: #007aff;
+                --tg-theme-button-color: #007aff;
+                --tg-theme-button-text-color: #ffffff;
+                --tg-theme-header-bg-color: #007aff;
+                --tg-theme-accent-text-color: #007aff;
+                --tg-theme-section-bg-color: #2c2c2e;
+                --tg-theme-section-header-text-color: #8e8e93;
+                --tg-theme-subtitle-text-color: #8e8e93;
+                --tg-theme-destructive-text-color: #ff453a;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Space 主界面 -->
+        <div id="space" class="page active">
+            <div class="tg-header">
+                <h1>WorkWork</h1>
+            </div>
+            
+            <div class="tg-message">
+                <div class="tg-message-text">体验更多功能，请登录</div>
+                <div class="tg-button-group">
+                    <button class="tg-button tg-button-secondary">Telegram</button>
+                    <button class="tg-button">钱包登录 ⭐</button>
+                </div>
+            </div>
+            
+            <div class="tg-segmented-control">
+                <div class="tg-segment active">全部</div>
+                <div class="tg-segment">关注</div>
+                <div class="tg-segment">活动</div>
+                <div class="tg-segment">招聘</div>
+            </div>
+            
+            <div class="tg-list">
+                <div class="tg-list-item">
+                    <div class="tg-avatar">A</div>
+                    <div class="tg-content">
+                        <div class="tg-title">数字游民Alice<span class="tg-badge">活动</span></div>
+                        <div class="tg-caption">2小时前</div>
+                        <div class="tg-body">🎉 曼谷数字游民聚会 - 本周六下午2点在Siam区咖啡厅，欢迎所有在泰国的朋友参加！</div>
+                        <div class="tg-actions">
+                            <div class="tg-action">👍 12</div>
+                            <div class="tg-action">💬 5</div>
+                            <div class="tg-action">🔗 分享</div>
+                            <div class="tg-action tg-action-primary">联系 (5积分)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tg-list-item">
+                    <div class="tg-avatar">B</div>
+                    <div class="tg-content">
+                        <div class="tg-title">远程开发者Bob<span class="tg-badge">招聘</span></div>
+                        <div class="tg-caption">5小时前</div>
+                        <div class="tg-body">🚀 寻找React前端开发者 - 远程工作，时薪$50-80，项目周期3个月。</div>
+                        <div class="tg-actions">
+                            <div class="tg-action">👍 8</div>
+                            <div class="tg-action">💬 12</div>
+                            <div class="tg-action">🔗 分享</div>
+                            <div class="tg-action tg-action-primary">联系 (10积分)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tg-list-item">
+                    <div class="tg-avatar">C</div>
+                    <div class="tg-content">
+                        <div class="tg-title">设计师Carol<span class="tg-badge">接单</span></div>
+                        <div class="tg-caption">1天前</div>
+                        <div class="tg-body">🎨 UI/UX设计服务 - 专业的移动端和Web端设计，5年经验。</div>
+                        <div class="tg-actions">
+                            <div class="tg-action">👍 15</div>
+                            <div class="tg-action">💬 3</div>
+                            <div class="tg-action">🔗 分享</div>
+                            <div class="tg-action tg-action-primary">联系 (8积分)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 发布界面 -->
+        <div id="publish" class="page">
+            <div class="tg-header">
+                <h1>发布内容</h1>
+            </div>
+            
+            <div class="tg-form">
+                <div class="tg-form-section">
+                    <div class="tg-form-header">内容类型</div>
+                    <select class="tg-input">
+                        <option>普通帖子</option>
+                        <option>活动分享</option>
+                        <option>招聘信息</option>
+                        <option>求职信息</option>
+                        <option>接单服务</option>
+                        <option>需求发布</option>
+                    </select>
+                </div>
+                
+                <div class="tg-form-section">
+                    <input type="text" class="tg-input" placeholder="标题">
+                    <textarea class="tg-textarea" placeholder="分享你的想法、经验或需求..."></textarea>
+                </div>
+                
+                <div class="tg-form-section">
+                    <input type="text" class="tg-input" placeholder="地点 (可选)">
+                    <select class="tg-input">
+                        <option>需要积分联系</option>
+                        <option>免费联系</option>
+                        <option>仅关注者可联系</option>
+                    </select>
+                </div>
+                
+                <button class="tg-button" style="width: 100%; margin-top: 16px;">发布</button>
+            </div>
+        </div>
+        
+        <!-- 应用界面 -->
+        <div id="apps" class="page">
+            <div class="tg-header">
+                <h1>应用中心</h1>
+            </div>
+            
+            <div class="tg-grid">
+                <div class="tg-grid-item">
+                    <div class="tg-grid-icon"></div>
+                    <div class="tg-grid-title">住宿</div>
+                    <div class="tg-grid-subtitle">开发中</div>
+                </div>
+                
+                <div class="tg-grid-item">
+                    <div class="tg-grid-icon"></div>
+                    <div class="tg-grid-title">教育</div>
+                    <div class="tg-grid-subtitle">规划中</div>
+                </div>
+                
+                <div class="tg-grid-item">
+                    <div class="tg-grid-icon"></div>
+                    <div class="tg-grid-title">活动</div>
+                    <div class="tg-grid-subtitle">已上线</div>
+                </div>
+                
+                <div class="tg-grid-item">
+                    <div class="tg-grid-icon"></div>
+                    <div class="tg-grid-title">招聘</div>
+                    <div class="tg-grid-subtitle">已上线</div>
+                </div>
+                
+                <div class="tg-grid-item">
+                    <div class="tg-grid-icon"></div>
+                    <div class="tg-grid-title">金融</div>
+                    <div class="tg-grid-subtitle">规划中</div>
+                </div>
+                
+                <div class="tg-grid-item">
+                    <div class="tg-grid-icon"></div>
+                    <div class="tg-grid-title">交通</div>
+                    <div class="tg-grid-subtitle">规划中</div>
+                </div>
+            </div>
+            
+            <div class="tg-message">
+                <div class="tg-message-text">🚀 更多功能正在开发中</div>
+                <div class="tg-subtitle">我们正在努力为数字游民打造更完整的生态系统</div>
+            </div>
+        </div>
+        
+        <!-- 个人中心 -->
+        <div id="profile" class="page">
+            <div class="tg-header">
+                <h1>我的</h1>
+            </div>
+            
+            <div class="tg-list">
+                <div class="tg-list-item">
+                    <div class="tg-avatar tg-avatar-large">我</div>
+                    <div class="tg-content">
+                        <div class="tg-title">我的昵称</div>
+                        <div class="tg-subtitle">数字游民 | 全栈开发者</div>
+                        <div class="tg-caption">世界是我的办公室</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tg-stats">
+                <div class="tg-stat">
+                    <div class="tg-stat-number">1,234</div>
+                    <div class="tg-stat-label">积分</div>
+                </div>
+                <div class="tg-stat">
+                    <div class="tg-stat-number">5</div>
+                    <div class="tg-stat-label">等级</div>
+                </div>
+                <div class="tg-stat">
+                    <div class="tg-stat-number">42</div>
+                    <div class="tg-stat-label">帖子</div>
+                </div>
+                <div class="tg-stat">
+                    <div class="tg-stat-number">128</div>
+                    <div class="tg-stat-label">关注</div>
+                </div>
+            </div>
+            
+            <div class="tg-list">
+                <div class="tg-list-item">
+                    <div class="tg-content">
+                        <div class="tg-title">个人资料</div>
+                    </div>
+                    <div class="tg-subtitle">></div>
+                </div>
+                <div class="tg-list-item">
+                    <div class="tg-content">
+                        <div class="tg-title">我的帖子</div>
+                    </div>
+                    <div class="tg-subtitle">></div>
+                </div>
+                <div class="tg-list-item">
+                    <div class="tg-content">
+                        <div class="tg-title">收藏帖子</div>
+                    </div>
+                    <div class="tg-subtitle">></div>
+                </div>
+            </div>
+            
+            <div class="tg-list">
+                <div class="tg-list-item">
+                    <div class="tg-content">
+                        <div class="tg-title">积分管理</div>
+                    </div>
+                    <div class="tg-subtitle">></div>
+                </div>
+                <div class="tg-list-item">
+                    <div class="tg-content">
+                        <div class="tg-title">我的钱包</div>
+                    </div>
+                    <div class="tg-subtitle">></div>
+                </div>
+                <div class="tg-list-item">
+                    <div class="tg-content">
+                        <div class="tg-title">订单管理</div>
+                    </div>
+                    <div class="tg-subtitle">></div>
+                </div>
+            </div>
+            
+            <div class="tg-list">
+                <div class="tg-list-item">
+                    <div class="tg-content">
+                        <div class="tg-title">我的足迹</div>
+                    </div>
+                    <div class="tg-subtitle">></div>
+                </div>
+                <div class="tg-list-item">
+                    <div class="tg-content">
+                        <div class="tg-title">设置</div>
+                    </div>
+                    <div class="tg-subtitle">></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Telegram 标准底部导航 -->
+        <div class="tg-tabbar">
+            <div class="tg-tab active" onclick="showPage('space')">
+                <div class="tg-tab-icon"></div>
+                <div class="tg-tab-label">Space</div>
+            </div>
+            <div class="tg-tab" onclick="showPage('apps')">
+                <div class="tg-tab-icon"></div>
+                <div class="tg-tab-label">应用</div>
+            </div>
+            <div class="tg-tab" onclick="showPage('publish')">
+                <div class="tg-tab-icon"></div>
+                <div class="tg-tab-label">发布</div>
+            </div>
+            <div class="tg-tab" onclick="showPage('profile')">
+                <div class="tg-tab-icon"></div>
+                <div class="tg-tab-label">我的</div>
+            </div>
+        </div>
+        
+        <!-- Telegram 标准浮动按钮 -->
+        <div class="tg-fab" onclick="showPage('publish')">+</div>
+    </div>
+    
+    <script>
+        function showPage(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 显示目标页面
+            document.getElementById(pageId).classList.add('active');
+            
+            // 更新导航状态
+            document.querySelectorAll('.tg-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 根据页面ID设置对应的导航项为活跃状态
+            const tabs = document.querySelectorAll('.tg-tab');
+            switch(pageId) {
+                case 'space':
+                    tabs[0].classList.add('active');
+                    break;
+                case 'apps':
+                    tabs[1].classList.add('active');
+                    break;
+                case 'publish':
+                    tabs[2].classList.add('active');
+                    break;
+                case 'profile':
+                    tabs[3].classList.add('active');
+                    break;
+            }
+        }
+        
+        // 分段控制器点击事件
+        document.querySelectorAll('.tg-segment').forEach(segment => {
+            segment.addEventListener('click', function() {
+                document.querySelectorAll('.tg-segment').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 联系按钮点击事件
+        document.querySelectorAll('.tg-action-primary').forEach(action => {
+            action.addEventListener('click', function(e) {
+                e.stopPropagation();
+                alert('需要登录并消耗积分才能联系发布者');
+            });
+        });
+        
+        // 登录按钮点击事件
+        document.querySelectorAll('.tg-button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.textContent.includes('钱包')) {
+                    alert('推荐使用钱包登录，支持TON和Kaia链');
+                } else if (this.textContent.includes('Telegram')) {
+                    alert('Telegram登录');
+                }
+            });
+        });
+        
+        // 模拟Telegram WebApp API
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+    </script>
+</body>
+</html>
