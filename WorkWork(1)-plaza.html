@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkWork 广场版</title>
+  <style>
+    :root {
+      --tg-theme-bg-color: #f8f8f8;
+      --tg-theme-text-color: #111;
+      --tg-theme-subtitle-text-color: #555;
+      --tg-theme-link-color: #007aff;
+      --tg-theme-button-color: #007aff;
+      --tg-theme-button-text-color: #fff;
+      --tg-theme-section-bg-color: #fff;
+      --tg-theme-section-header-text-color: #888;
+      --tg-theme-destructive-text-color: #ff3b30;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --tg-theme-bg-color: #1c1c1e;
+        --tg-theme-text-color: #fff;
+        --tg-theme-subtitle-text-color: #8e8e93;
+        --tg-theme-link-color: #68a0ff;
+        --tg-theme-button-color: #0a84ff;
+        --tg-theme-button-text-color: #fff;
+        --tg-theme-section-bg-color: #2c2c2e;
+        --tg-theme-section-header-text-color: #8e8e93;
+        --tg-theme-destructive-text-color: #ff453a;
+      }
+    }
+
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--tg-theme-bg-color); color: var(--tg-theme-text-color); }
+    .container { max-width: 640px; margin: 0 auto; padding-bottom: 88px; }
+    .page { display: none; padding: 16px; }
+    .page.active { display: block; }
+
+    .tg-header { position: sticky; top: 0; background: var(--tg-theme-section-bg-color); padding: 12px 0; margin-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .tg-header h1 { margin: 0; font-size: 18px; }
+
+    .tg-message { background: var(--tg-theme-section-bg-color); border-radius: 12px; padding: 12px; margin: 12px 0; }
+    .tg-message-text { font-size: 14px; }
+    .tg-button-group { display: flex; gap: 8px; margin-top: 8px; }
+    .tg-button { background: var(--tg-theme-button-color); color: var(--tg-theme-button-text-color); border: none; border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+    .tg-button-secondary { background: transparent; color: var(--tg-theme-link-color); border: 1px solid var(--tg-theme-link-color); }
+
+    .tg-segmented-control { display: flex; gap: 8px; border-radius: 10px; background: rgba(0,0,0,0.05); padding: 6px; margin: 12px 0; }
+    .tg-segment { flex: 0 0 auto; padding: 8px 10px; border-radius: 8px; font-size: 12px; color: var(--tg-theme-subtitle-text-color); cursor: pointer; }
+    .tg-segment.active { background: var(--tg-theme-section-bg-color); color: var(--tg-theme-text-color); }
+
+    .tg-list { display: grid; gap: 8px; }
+    .tg-list-item { display: flex; gap: 10px; background: var(--tg-theme-section-bg-color); border-radius: 12px; padding: 12px; }
+    .tg-avatar { width: 36px; height: 36px; border-radius: 18px; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .tg-avatar-large { width: 52px; height: 52px; border-radius: 26px; }
+    .tg-content { flex: 1; }
+    .tg-title { font-weight: 600; font-size: 14px; }
+    .tg-caption { font-size: 12px; color: var(--tg-theme-subtitle-text-color); margin-top: 2px; }
+    .tg-body { font-size: 14px; margin-top: 6px; }
+    .tg-badge { margin-left: 6px; background: rgba(0,0,0,0.06); border-radius: 6px; padding: 2px 6px; font-size: 11px; }
+    .tg-actions { display: flex; gap: 12px; margin-top: 8px; font-size: 13px; color: var(--tg-theme-subtitle-text-color); }
+    .tg-action-primary { color: var(--tg-theme-link-color); cursor: pointer; }
+
+    .tg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .tg-grid-item { background: var(--tg-theme-section-bg-color); border-radius: 12px; padding: 12px; text-align: center; }
+    .tg-grid-icon { width: 40px; height: 40px; border-radius: 10px; background: #ddd; margin: 0 auto 8px; }
+    .tg-grid-title { font-size: 13px; font-weight: 600; }
+    .tg-grid-subtitle { font-size: 12px; color: var(--tg-theme-subtitle-text-color); }
+
+    .tg-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+    .tg-stat { background: var(--tg-theme-section-bg-color); border-radius: 12px; padding: 12px; text-align: center; }
+    .tg-stat-number { font-size: 16px; font-weight: 700; }
+    .tg-stat-label { font-size: 12px; color: var(--tg-theme-subtitle-text-color); }
+
+    .tg-form { background: var(--tg-theme-section-bg-color); border-radius: 12px; padding: 12px; }
+    .tg-form-section { margin-bottom: 12px; }
+    .tg-form-header { font-size: 12px; color: var(--tg-theme-section-header-text-color); margin-bottom: 6px; }
+    .tg-input, .tg-textarea { width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid rgba(0,0,0,0.12); padding: 10px; font-size: 14px; background: transparent; color: var(--tg-theme-text-color); }
+    .tg-textarea { min-height: 90px; resize: vertical; }
+
+    .tg-tabbar { position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: var(--tg-theme-section-bg-color); border-top: 1px solid rgba(0,0,0,0.08); display: grid; grid-template-columns: repeat(5, 1fr); }
+    .tg-tab { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: var(--tg-theme-subtitle-text-color); cursor: pointer; }
+    .tg-tab.active { color: var(--tg-theme-text-color); font-weight: 600; }
+    .tg-tab-icon { width: 16px; height: 16px; border-radius: 4px; background: #ddd; margin-bottom: 2px; }
+
+    .tg-fab { position: fixed; right: 16px; bottom: 72px; width: 44px; height: 44px; border-radius: 22px; background: var(--tg-theme-button-color); color: var(--tg-theme-button-text-color); display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+    .tg-fab:active { transform: scale(0.98); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 探索：整合目的地 + 活动 + 故事 + 榜单 -->
+    <div id="explore" class="page">
+      <div class="tg-header"><h1>探索 Explore</h1></div>
+
+      <div class="tg-form-section">
+        <div class="tg-form-header">城市推荐</div>
+        <div class="tg-grid">
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">曼谷</div><div class="tg-grid-subtitle">热门</div></div>
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">清迈</div><div class="tg-grid-subtitle">安静</div></div>
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">巴厘岛</div><div class="tg-grid-subtitle">海岛</div></div>
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">台北</div><div class="tg-grid-subtitle">美食</div></div>
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">首尔</div><div class="tg-grid-subtitle">潮流</div></div>
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">新加坡</div><div class="tg-grid-subtitle">高效</div></div>
+        </div>
+      </div>
+
+      <div class="tg-form-section">
+        <div class="tg-form-header">游民故事</div>
+        <div class="tg-list">
+          <div class="tg-list-item">
+            <div class="tg-avatar">故</div>
+            <div class="tg-content">
+              <div class="tg-title">小王在台北的一个月<span class="tg-badge">故事</span></div>
+              <div class="tg-caption">生活成本、社交与咖啡馆</div>
+              <div class="tg-body">台北对新入门的游民非常友好，地铁方便，社区活跃。</div>
+            </div>
+          </div>
+          <div class="tg-list-item">
+            <div class="tg-avatar">事</div>
+            <div class="tg-content">
+              <div class="tg-title">在清迈远程的日常<span class="tg-badge">故事</span></div>
+              <div class="tg-caption">慢节奏与工作效率</div>
+              <div class="tg-body">社区空间多，生活节奏慢，适合深度工作与社交。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tg-form-section">
+        <div class="tg-form-header">线下活动</div>
+        <div class="tg-list">
+          <div class="tg-list-item">
+            <div class="tg-avatar">E</div>
+            <div class="tg-content">
+              <div class="tg-title">清迈周末路跑<span class="tg-badge">活动</span></div>
+              <div class="tg-caption">本周日 7:00</div>
+              <div class="tg-body">一起跑步，集合地：Nimman Maya门口。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tg-form-section">
+        <div class="tg-form-header">签证/住宿热门榜单</div>
+        <div class="tg-grid">
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">签证热门</div><div class="tg-grid-subtitle">泰国/印尼/新加坡</div></div>
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">住宿热门</div><div class="tg-grid-subtitle">曼谷/清迈/巴厘岛</div></div>
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">性价比</div><div class="tg-grid-subtitle">台北/清迈/胡志明</div></div>
+          <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">办公空间</div><div class="tg-grid-subtitle">清迈/新加坡/首尔</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 广场：信息社交流（原核心） -->
+    <div id="feed" class="page active">
+      <div class="tg-header"><h1>WorkWork</h1></div>
+      <div class="tg-message">
+        <div class="tg-message-text">体验更多功能，请登录</div>
+        <div class="tg-button-group">
+          <button class="tg-button tg-button-secondary">Telegram</button>
+          <button class="tg-button">钱包登录 ⭐</button>
+        </div>
+      </div>
+
+      <div class="tg-segmented-control">
+        <div class="tg-segment active">全部</div>
+        <div class="tg-segment">关注</div>
+        <div class="tg-segment">活动</div>
+        <div class="tg-segment">招聘</div>
+      </div>
+
+      <div class="tg-list">
+        <div class="tg-list-item">
+          <div class="tg-avatar">A</div>
+          <div class="tg-content">
+            <div class="tg-title">数字游民Alice<span class="tg-badge">活动</span></div>
+            <div class="tg-caption">2小时前</div>
+            <div class="tg-body">🎉 曼谷数字游民聚会 - 本周六下午2点在Siam区咖啡厅，欢迎参加！</div>
+            <div class="tg-actions">
+              <div>👍 12</div><div>💬 5</div><div>🔗 分享</div>
+              <div class="tg-action-primary">联系 (5积分)</div>
+            </div>
+          </div>
+        </div>
+        <div class="tg-list-item">
+          <div class="tg-avatar">B</div>
+          <div class="tg-content">
+            <div class="tg-title">远程开发者Bob<span class="tg-badge">招聘</span></div>
+            <div class="tg-caption">5小时前</div>
+            <div class="tg-body">🚀 寻找React前端开发者 - 远程，时薪$50-80，周期3个月。</div>
+            <div class="tg-actions">
+              <div>👍 8</div><div>💬 12</div><div>🔗 分享</div>
+              <div class="tg-action-primary">联系 (10积分)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 发布区域（并入广场） -->
+      <div id="publish" class="tg-section" style="margin-top:16px;">
+        <div class="tg-header"><h1>发布内容</h1></div>
+        <div class="tg-form">
+          <div class="tg-form-section">
+            <div class="tg-form-header">内容类型</div>
+            <select class="tg-input">
+              <option>普通帖子</option>
+              <option>活动分享</option>
+              <option>招聘信息</option>
+              <option>求职信息</option>
+              <option>接单服务</option>
+              <option>需求发布</option>
+            </select>
+          </div>
+          <div class="tg-form-section">
+            <input type="text" class="tg-input" placeholder="标题">
+            <textarea class="tg-textarea" placeholder="分享你的想法、经验或需求..."></textarea>
+          </div>
+          <div class="tg-form-section">
+            <input type="text" class="tg-input" placeholder="地点 (可选)">
+            <select class="tg-input">
+              <option>需要积分联系</option>
+              <option>免费联系</option>
+              <option>仅关注者可联系</option>
+            </select>
+          </div>
+          <button class="tg-button" style="width:100%; margin-top:8px;">发布</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 -->
+    <div id="earn" class="page">
+      <div class="tg-header"><h1>任务 Earn</h1></div>
+      <div class="tg-list">
+        <div class="tg-list-item">
+          <div class="tg-avatar">⭐</div>
+          <div class="tg-content">
+            <div class="tg-title">每日签到</div>
+            <div class="tg-caption">每天打开应用完成签到</div>
+            <div class="tg-actions"><div class="tg-action-primary">签到</div></div>
+          </div>
+        </div>
+        <div class="tg-list-item">
+          <div class="tg-avatar">AI</div>
+          <div class="tg-content">
+            <div class="tg-title">AI 使用</div>
+            <div class="tg-caption">使用AI工具获得奖励</div>
+            <div class="tg-actions"><div class="tg-action-primary">开始</div></div>
+          </div>
+        </div>
+        <div class="tg-list-item">
+          <div class="tg-avatar">交</div>
+          <div class="tg-content">
+            <div class="tg-title">交易</div>
+            <div class="tg-caption">完成交易任务赚取WW</div>
+            <div class="tg-actions"><div class="tg-action-primary">去交易</div></div>
+          </div>
+        </div>
+        <div class="tg-list-item">
+          <div class="tg-avatar">觅</div>
+          <div class="tg-content">
+            <div class="tg-title">活动签到</div>
+            <div class="tg-caption">参加线下活动并签到</div>
+            <div class="tg-actions"><div class="tg-action-primary">签到</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tg-stats">
+        <div class="tg-stat"><div class="tg-stat-number">0</div><div class="tg-stat-label">今日积分</div></div>
+        <div class="tg-stat"><div class="tg-stat-number">1,234</div><div class="tg-stat-label">总积分</div></div>
+        <div class="tg-stat"><div class="tg-stat-number">WW</div><div class="tg-stat-label">代币</div></div>
+      </div>
+    </div>
+
+    <!-- 应用 -->
+    <div id="apps" class="page">
+      <div class="tg-header"><h1>应用中心</h1></div>
+      <div class="tg-grid">
+        <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">住宿</div><div class="tg-grid-subtitle">开发中</div></div>
+        <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">教育</div><div class="tg-grid-subtitle">规划中</div></div>
+        <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">活动</div><div class="tg-grid-subtitle">已上线</div></div>
+        <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">招聘</div><div class="tg-grid-subtitle">已上线</div></div>
+        <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">金融</div><div class="tg-grid-subtitle">规划中</div></div>
+        <div class="tg-grid-item"><div class="tg-grid-icon"></div><div class="tg-grid-title">交通</div><div class="tg-grid-subtitle">规划中</div></div>
+      </div>
+      <div class="tg-message">
+        <div class="tg-message-text">🚀 更多功能正在开发中</div>
+        <div class="tg-subtitle" style="font-size:12px;color:var(--tg-theme-subtitle-text-color);">我们正在努力为数字游民打造更完整的生态系统</div>
+      </div>
+    </div>
+
+    <!-- 我的 -->
+    <div id="me" class="page">
+      <div class="tg-header"><h1>我的</h1></div>
+      <div class="tg-list">
+        <div class="tg-list-item">
+          <div class="tg-avatar tg-avatar-large">我</div>
+          <div class="tg-content">
+            <div class="tg-title">我的昵称</div>
+            <div class="tg-caption">数字游民 | 全栈开发者</div>
+          </div>
+        </div>
+      </div>
+      <div class="tg-stats">
+        <div class="tg-stat"><div class="tg-stat-number">1,234</div><div class="tg-stat-label">积分</div></div>
+        <div class="tg-stat"><div class="tg-stat-number">5</div><div class="tg-stat-label">等级</div></div>
+        <div class="tg-stat"><div class="tg-stat-number">42</div><div class="tg-stat-label">帖子</div></div>
+      </div>
+
+
+      <div class="tg-list">
+        <div class="tg-list-item"><div class="tg-content"><div class="tg-title">我的足迹</div></div><div class="tg-subtitle">></div></div>
+        <div class="tg-list-item"><div class="tg-content"><div class="tg-title">设置</div></div><div class="tg-subtitle">></div></div>
+      </div>
+    </div>
+
+    <!-- 底部导航：探索-广场-应用-任务-我的 -->
+    <div class="tg-tabbar">
+      <div class="tg-tab" onclick="showPage('explore')"><div class="tg-tab-icon"></div><div class="tg-tab-label">探索</div></div>
+      <div class="tg-tab active" onclick="showPage('feed')"><div class="tg-tab-icon"></div><div class="tg-tab-label">广场</div></div>
+      <div class="tg-tab" onclick="showPage('apps')"><div class="tg-tab-icon"></div><div class="tg-tab-label">应用</div></div>
+      <div class="tg-tab" onclick="showPage('earn')"><div class="tg-tab-icon"></div><div class="tg-tab-label">任务</div></div>
+      <div class="tg-tab" onclick="showPage('me')"><div class="tg-tab-icon"></div><div class="tg-tab-label">我的</div></div>
+    </div>
+
+    <!-- 悬浮发布按钮：滚动到广场的发布区 -->
+    <div class="tg-fab" onclick="scrollToPublish()">+</div>
+  </div>
+
+  <script>
+    // 初始进入默认显示“广场”
+    document.addEventListener('DOMContentLoaded', () => showPage('feed'));
+
+    function showPage(pageId){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.getElementById(pageId)?.classList.add('active');
+      const tabs = document.querySelectorAll('.tg-tab');
+      tabs.forEach(t=>t.classList.remove('active'));
+      switch(pageId){
+        case 'explore': tabs[0].classList.add('active'); break;
+        case 'feed': tabs[1].classList.add('active'); break;
+        case 'apps': tabs[2].classList.add('active'); break;
+        case 'earn': tabs[3].classList.add('active'); break;
+        case 'me': tabs[4].classList.add('active'); break;
+      }
+    }
+
+    function scrollToPublish(){
+      showPage('feed');
+      const target = document.getElementById('publish');
+      if(target){ target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    }
+
+    // 分段点击
+    document.querySelectorAll('.tg-segment').forEach(seg=>{
+      seg.addEventListener('click', function(){
+        this.parentElement?.querySelectorAll('.tg-segment').forEach(x=>x.classList.remove('active'));
+        this.classList.add('active');
+      })
+    })
+
+    // 联系动作
+    document.querySelectorAll('.tg-action-primary').forEach(a=>{
+      a.addEventListener('click', e=>{ e.stopPropagation(); alert('需要登录并消耗积分才能联系发布者'); });
+    })
+
+    // 登录按钮提示
+    document.querySelectorAll('.tg-button').forEach(btn=>{
+      btn.addEventListener('click', function(){
+        if(this.textContent.includes('钱包')) alert('推荐使用钱包登录，支持TON和Kaia链');
+        else if(this.textContent.includes('Telegram')) alert('Telegram登录');
+      })
+    })
+
+
+    // 模拟Telegram WebApp API
+    if(window.Telegram && window.Telegram.WebApp){
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+  </script>
+</body>
+</html>
