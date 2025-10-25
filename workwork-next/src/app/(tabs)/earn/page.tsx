@@ -12,8 +12,8 @@ const TASKS: Record<'popular' | 'onchain' | 'invite', Task[]> = {
     { icon: '名', title: '将邀请链接添加到个人简介', reward: 60 },
   ],
   onchain: [
-    { icon: '链', title: '完成一次链上交互', reward: 40 },
-    { icon: '桥', title: '跨链桥兑换一次资产', reward: 80 },
+    { icon: '链', title: '完成一次链上存款', reward: 40 },
+    { icon: '桥', title: '使用二维码扫码支付一次', reward: 80 },
   ],
   invite: [
     { icon: '邀', title: '邀请 1 位好友加入', reward: 100 },
@@ -51,7 +51,7 @@ export default function EarnPage() {
           热门任务
         </div>
         <div className={`ww-tab ${tab === 'onchain' ? 'active' : ''}`} onClick={() => setTab('onchain')}>
-          链上交互任务
+          存款交互任务
         </div>
         <div className={`ww-tab ${tab === 'invite' ? 'active' : ''}`} onClick={() => setTab('invite')}>
           邀请赛

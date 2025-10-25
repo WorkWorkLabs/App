@@ -121,3 +121,26 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Ro
 .ww-timeline-item { position: relative; padding-left: 18px; }
 .ww-timeline-item::before { content: ""; position: absolute; left: 4px; top: 6px; width: 6px; height: 6px; border-radius: 3px; background: var(--tg-theme-link-color); }
 .ww-stack { display: grid; grid-template-columns: 1fr; gap: 10px; }
+
+/* Social icons */
+.ww-social { display: flex; gap: 8px; align-items: center; }
+.ww-icon { width: 24px; height: 24px; border-radius: 12px; background: rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--tg-theme-text-color); cursor: pointer; }
+.ww-icon:hover { background: rgba(0,0,0,0.1); }
+.ww-badge-nft { display: inline-flex; align-items: center; gap: 6px; }
+
+.ww-card-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.ww-card-subtitle { font-size: 12px; color: var(--tg-theme-subtitle-text-color); }
+.ww-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ww-chip { padding: 6px 10px; border-radius: 12px; background: rgba(0,0,0,0.06); font-size: 12px; }
+
+.ww-progress { margin-top: 6px; }
+.ww-progress-bar { height: 8px; border-radius: 6px; background: rgba(0,0,0,0.08); overflow: hidden; }
+.ww-progress-fill { height: 8px; background: var(--tg-theme-link-color); width: 30%; }
+
+.ww-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.ww-mini-list { display: grid; gap: 8px; }
+
+.ww-timeline { display: grid; gap: 10px; }
+.ww-timeline-item { position: relative; padding-left: 18px; }
+.ww-timeline-item::before { content: ""; position: absolute; left: 4px; top: 6px; width: 6px; height: 6px; border-radius: 3px; background: var(--tg-theme-link-color); }
+.ww-stack { display: grid; grid-template-columns: 1fr; gap: 10px; }

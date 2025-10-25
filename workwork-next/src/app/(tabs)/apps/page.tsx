@@ -8,7 +8,6 @@ export default function AppsPage() {
         <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">教育</div><div className="tg-grid-subtitle">规划中</div></div>
         <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">活动</div><div className="tg-grid-subtitle">已上线</div></div>
         <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">招聘</div><div className="tg-grid-subtitle">已上线</div></div>
-        <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">金融</div><div className="tg-grid-subtitle">规划中</div></div>
         <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">交通</div><div className="tg-grid-subtitle">规划中</div></div>
       </div>
       <div className="tg-message">

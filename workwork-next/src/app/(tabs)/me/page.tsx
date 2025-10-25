@@ -9,7 +9,7 @@ function copy(text: string) {
 
 export default function MePage() {
   const username = 'Yanbo'
-  const solAddress = '9X3K...a1q7' // 占位地址，后续接入 Wallet Adapter
+  const solAddress = 'work-work.sol' // 占位地址，后续接入 Wallet Adapter
   const level = 'LV1'
 
   const connectWallet = () => alert('连接钱包 (Phantom / Backpack / Solflare)')
@@ -25,13 +25,20 @@ export default function MePage() {
             <span>Solana: {solAddress}</span>
             <span className="ww-copy" onClick={() => copy(solAddress)}>复制</span>
           </div>
+          <div className="ww-social">
+            <div className="ww-icon" aria-label="X">X</div>
+            <div className="ww-icon" aria-label="GitHub">GH</div>
+            <div className="ww-icon" aria-label="Telegram">TG</div>
+            <div className="ww-icon" aria-label="LinkedIn">in</div>
+          </div>
           <div className="ww-badge-nft">
             <span className="ww-chip">等级 {level}</span>
             <span className="ww-chip">Badge: Explorer</span>
           </div>
         </div>
         <div className="tg-button-group">
-          <button className="tg-button tg-button-secondary" onClick={connectWallet}>连接钱包</button>
+          <button className="tg-button tg-button-secondary" onClick={() => { const url = `${window?.location?.origin ?? ''}/me`; navigator.clipboard?.writeText(url); alert('已复制名片链接'); }}>分享名片</button>
+          <button className="tg-button tg-button-secondary" onClick={() => alert('编辑主页（占位）')}>编辑主页</button>
         </div>
       </div>
 
@@ -41,11 +48,8 @@ export default function MePage() {
         <div className="ww-card">
           <div>
             <div className="ww-card-title">💎 钱包 Wallet</div>
-            <div className="ww-card-subtitle">SPL Token 与 NFT Pass</div>
             <div className="ww-row" style={{ marginTop: 8 }}>
-              <span className="ww-chip">WW: 31,615</span>
-              <span className="ww-chip">USDC: 0</span>
-              <span className="ww-chip">NFT: 2</span>
+              <span className="ww-chip">USDC: 200</span>
             </div>
           </div>
           <div className="ww-right">
@@ -53,16 +57,26 @@ export default function MePage() {
           </div>
         </div>
 
+        {/* WorkWork Pass */}
+        <div className="ww-card">
+          <div>
+            <div className="ww-card-title">🎟️ WorkWork Pass</div>
+            <div className="ww-card-subtitle">用于联系人场景与任务悬赏，可按使用消耗</div>
+            <div className="ww-row" style={{ marginTop: 8 }}>
+              <span className="ww-chip">状态：未注册</span>
+              <button className="ww-button" onClick={() => alert('注册获取 WorkWork Pass')}>注册获取</button>
+              <button className="ww-button" onClick={() => alert('购买（后续开放）')}>购买</button>
+            </div>
+          </div>
+        </div>
+
         {/* 积分系统 */}
         <div className="ww-card">
           <div>
             <div className="ww-card-title">🪙 积分系统</div>
-            <div className="ww-card-subtitle">Earn / Redeem / Convert (SPL Token: WW)</div>
             <div className="ww-row" style={{ marginTop: 8 }}>
               <span className="ww-chip">余额 31,615 WW</span>
               <button className="ww-button" onClick={() => alert('进入 Earn')}>Earn</button>
-              <button className="ww-button" onClick={() => alert('进入 Redeem')}>Redeem</button>
-              <button className="ww-button" onClick={() => alert('进入 Convert')}>Convert</button>
             </div>
             <div className="ww-progress">
               <div className="ww-progress-bar"><div className="ww-progress-fill" /></div>
@@ -75,7 +89,6 @@ export default function MePage() {
         <div className="ww-card">
           <div>
             <div className="ww-card-title">🧾 发帖</div>
-            <div className="ww-card-subtitle">Arweave / Shadow Drive 可选存储</div>
             <div className="ww-mini-list" style={{ marginTop: 8 }}>
               <div className="ww-row"><span className="ww-chip">我的帖子：12</span><button className="ww-button" onClick={() => alert('跳转广场')}>去广场</button></div>
               <div className="ww-row"><span className="ww-chip">我的收藏：5</span><button className="ww-button" onClick={() => alert('查看收藏')}>收藏</button></div>
@@ -100,14 +113,15 @@ export default function MePage() {
           </div>
         </div>
 
-        {/* 订单（Solana Pay） */}
+        {/* 订单（我的订单） */}
         <div className="ww-card">
           <div>
-            <div className="ww-card-title">🧳 订单</div>
-            <div className="ww-card-subtitle">Solana Pay 支付记录</div>
-            <div className="ww-mini-list" style={{ marginTop: 8 }}>
-              <div className="ww-row"><span className="ww-chip">WorkWork Pass · Completed</span><button className="ww-button" onClick={() => alert('查看订单')}>查看</button></div>
-              <div className="ww-row"><span className="ww-chip">活动报名 · Pending</span><button className="ww-button" onClick={() => alert('重新支付')}>支付</button></div>
+            <div className="ww-card-title">我的订单</div>
+            <div className="tg-grid" style={{ marginTop: 8 }}>
+              <div className="tg-grid-item" onClick={() => alert('查看待付款订单')}><div className="tg-grid-icon"></div><div className="tg-grid-title">待付款</div></div>
+              <div className="tg-grid-item" onClick={() => alert('查看待审核订单')}><div className="tg-grid-icon"></div><div className="tg-grid-title">待审核</div></div>
+              <div className="tg-grid-item" onClick={() => alert('查看已使用订单')}><div className="tg-grid-icon"></div><div className="tg-grid-title">已使用</div></div>
+              <div className="tg-grid-item" onClick={() => alert('查看全部订单')}><div className="tg-grid-icon"></div><div className="tg-grid-title">全部订单</div></div>
             </div>
           </div>
         </div>
