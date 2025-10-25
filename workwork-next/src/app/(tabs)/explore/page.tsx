@@ -7,12 +7,30 @@ export default function ExplorePage() {
       <div className="tg-form-section">
         <div className="tg-form-header">城市推荐</div>
         <div className="tg-grid">
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">曼谷</div><div className="tg-grid-subtitle">热门</div></div>
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">清迈</div><div className="tg-grid-subtitle">安静</div></div>
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">巴厘岛</div><div className="tg-grid-subtitle">海岛</div></div>
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">台北</div><div className="tg-grid-subtitle">美食</div></div>
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">首尔</div><div className="tg-grid-subtitle">潮流</div></div>
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">新加坡</div><div className="tg-grid-subtitle">高效</div></div>
+          <div className="tg-grid-item">
+            <img className="tg-grid-thumb" src="https://source.unsplash.com/600x360/?Bangkok,city,skyline" alt="曼谷风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">曼谷</div><div className="tg-grid-subtitle">热门</div>
+          </div>
+          <div className="tg-grid-item">
+            <img className="tg-grid-thumb" src="https://source.unsplash.com/600x360/?Chiang%20Mai,city,temple" alt="清迈风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">清迈</div><div className="tg-grid-subtitle">安静</div>
+          </div>
+          <div className="tg-grid-item">
+            <img className="tg-grid-thumb" src="https://source.unsplash.com/600x360/?Bali,beach,temple" alt="巴厘岛风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">巴厘岛</div><div className="tg-grid-subtitle">海岛</div>
+          </div>
+          <div className="tg-grid-item">
+            <img className="tg-grid-thumb" src="https://source.unsplash.com/600x360/?Taipei,skyline,taiwan" alt="台北风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">台北</div><div className="tg-grid-subtitle">美食</div>
+          </div>
+          <div className="tg-grid-item">
+            <img className="tg-grid-thumb" src="https://source.unsplash.com/600x360/?Seoul,skyline,Korea" alt="首尔风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">首尔</div><div className="tg-grid-subtitle">潮流</div>
+          </div>
+          <div className="tg-grid-item">
+            <img className="tg-grid-thumb" src="https://source.unsplash.com/600x360/?Singapore,skyline,marina%20bay" alt="新加坡风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">新加坡</div><div className="tg-grid-subtitle">高效</div>
+          </div>
         </div>
       </div>
 

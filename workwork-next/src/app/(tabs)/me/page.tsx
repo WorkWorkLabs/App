@@ -1,6 +1,8 @@
 'use client'
 
 import React from 'react'
+import { useWallet, useConnection } from '@solana/wallet-adapter-react'
+import { LAMPORTS_PER_SOL } from '@solana/web3.js'
 
 function copy(text: string) {
   navigator.clipboard?.writeText(text)
@@ -9,10 +11,48 @@ function copy(text: string) {
 
 export default function MePage() {
   const username = 'Yanbo'
-  const solAddress = 'work-work.sol' // 占位地址，后续接入 Wallet Adapter
   const level = 'LV1'
 
-  const connectWallet = () => alert('连接钱包 (Phantom / Backpack / Solflare)')
+  const { connection } = useConnection()
+  const { publicKey, connected, connect, disconnect } = useWallet()
+  const [solBalance, setSolBalance] = React.useState(null as number | null)
+  const [points, setPoints] = React.useState(null as number | null)
+  const address = publicKey?.toBase58() || null
+
+  React.useEffect(() => {
+    let cancelled = false
+    async function load() {
+      if (publicKey) {
+        try {
+          const lamports = await connection.getBalance(publicKey)
+          if (!cancelled) setSolBalance(lamports / LAMPORTS_PER_SOL)
+        } catch (e) {
+          console.error('getBalance error', e)
+        }
+        try {
+          const res = await fetch(`/api/points?address=${publicKey.toBase58()}`)
+          const json = await res.json()
+          if (!cancelled) setPoints(json.points ?? 0)
+        } catch (e) {
+          console.error('points fetch error', e)
+        }
+      } else {
+        setSolBalance(null)
+        setPoints(null)
+      }
+    }
+    load()
+    return () => { cancelled = true }
+  }, [publicKey, connection])
+
+  const connectWallet = async () => {
+    try {
+      await connect()
+    } catch (e) {
+      alert('连接失败，请确认已安装 Phantom')
+      console.error(e)
+    }
+  }
 
   return (
     <div className="page" id="me">
@@ -22,8 +62,8 @@ export default function MePage() {
         <div className="ww-profile-main">
           <div className="tg-title" style={{ fontSize: 16 }}>{username}</div>
           <div className="ww-addr">
-            <span>Solana: {solAddress}</span>
-            <span className="ww-copy" onClick={() => copy(solAddress)}>复制</span>
+            <span>Solana: {address ?? '未连接'}</span>
+            <span className="ww-copy" onClick={() => copy(address ?? '')}>复制</span>
           </div>
           <div className="ww-social">
             <div className="ww-icon" aria-label="X">X</div>
@@ -49,11 +89,12 @@ export default function MePage() {
           <div>
             <div className="ww-card-title">💎 钱包 Wallet</div>
             <div className="ww-row" style={{ marginTop: 8 }}>
-              <span className="ww-chip">USDC: 200</span>
+              <span className="ww-chip">SOL: {solBalance !== null ? solBalance.toFixed(4) : '-'}</span>
+              <span className="ww-chip">积分: {points ?? '-'}</span>
             </div>
           </div>
           <div className="ww-right">
-            <button className="ww-button" onClick={connectWallet}>连接</button>
+            <button className="ww-button" onClick={connected ? disconnect : connectWallet}>{connected ? '断开' : '连接'}</button>
           </div>
         </div>
 
