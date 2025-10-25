@@ -3,98 +3,99 @@ export default function ExplorePage() {
   return (
     <div className="page" id="explore">
       <div className="tg-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h1>探索 Explore</h1>
+        <h1>Explore</h1>
         <div className="tg-location" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: 14, color: 'var(--tg-theme-subtitle-text-color)' }}>当前位置</span>
-          <span className="ww-chip">深圳</span>
+          <span style={{ fontSize: 14, color: 'var(--tg-theme-subtitle-text-color)' }}>Current Location</span>
+          <span className="ww-chip">Shenzhen</span>
+          <button className="tg-button" onClick={() => alert('Scan QR Code (placeholder)')}>Scan QR Code</button>
         </div>
       </div>
 
       <div className="tg-form-section">
-        <div className="tg-form-header">城市推荐</div>
+        <div className="tg-form-header">City Recommendations</div>
         <div className="tg-grid">
           <div className="tg-grid-item">
-            <img className="tg-grid-thumb" src="https://picsum.photos/seed/bangkok-scenery/600/360" alt="曼谷风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
-            <div className="tg-grid-title">曼谷</div><div className="tg-grid-subtitle">热门</div>
+            <img className="tg-grid-thumb" src="https://picsum.photos/seed/bangkok-scenery/600/360" alt="Bangkok Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">Bangkok</div><div className="tg-grid-subtitle">Popular</div>
           </div>
           <div className="tg-grid-item">
-            <img className="tg-grid-thumb" src="https://picsum.photos/seed/chiangmai-scenery/600/360" alt="清迈风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
-            <div className="tg-grid-title">清迈</div><div className="tg-grid-subtitle">安静</div>
+            <img className="tg-grid-thumb" src="https://picsum.photos/seed/chiangmai-scenery/600/360" alt="Chiang Mai Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">Chiang Mai</div><div className="tg-grid-subtitle">Quiet</div>
           </div>
           <div className="tg-grid-item">
-            <img className="tg-grid-thumb" src="https://picsum.photos/seed/bali-scenery/600/360" alt="巴厘岛风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
-            <div className="tg-grid-title">巴厘岛</div><div className="tg-grid-subtitle">海岛</div>
+            <img className="tg-grid-thumb" src="https://picsum.photos/seed/bali-scenery/600/360" alt="Bali Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">Bali</div><div className="tg-grid-subtitle">Island</div>
           </div>
           <div className="tg-grid-item">
-            <img className="tg-grid-thumb" src="https://picsum.photos/seed/taipei-scenery/600/360" alt="台北风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
-            <div className="tg-grid-title">台北</div><div className="tg-grid-subtitle">美食</div>
+            <img className="tg-grid-thumb" src="https://picsum.photos/seed/taipei-scenery/600/360" alt="Taipei Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">Taipei</div><div className="tg-grid-subtitle">Cuisine</div>
           </div>
           <div className="tg-grid-item">
-            <img className="tg-grid-thumb" src="https://picsum.photos/seed/seoul-scenery/600/360" alt="首尔风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
-            <div className="tg-grid-title">首尔</div><div className="tg-grid-subtitle">潮流</div>
+            <img className="tg-grid-thumb" src="https://picsum.photos/seed/seoul-scenery/600/360" alt="Seoul Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">Seoul</div><div className="tg-grid-subtitle">Trendy</div>
           </div>
           <div className="tg-grid-item">
-            <img className="tg-grid-thumb" src="https://picsum.photos/seed/singapore-scenery/600/360" alt="新加坡风景" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
-            <div className="tg-grid-title">新加坡</div><div className="tg-grid-subtitle">高效</div>
+            <img className="tg-grid-thumb" src="https://picsum.photos/seed/singapore-scenery/600/360" alt="Singapore Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">Singapore</div><div className="tg-grid-subtitle">Efficient</div>
           </div>
         </div>
       </div>
 
       <div className="tg-form-section">
-        <div className="tg-form-header">游民故事</div>
+        <div className="tg-form-header">Nomad Stories</div>
         <div className="tg-list">
           <div className="tg-list-item">
-            <div className="tg-avatar">故</div>
+            <div className="tg-avatar">S</div>
             <div className="tg-content">
-              <div className="tg-title">小王在台北的一个月<span className="tg-badge">故事</span></div>
-              <div className="tg-caption">生活成本、社交与咖啡馆</div>
-              <div className="tg-body">台北对新入门的游民非常友好，地铁方便，社区活跃。</div>
+              <div className="tg-title">A Month in Taipei<span className="tg-badge">Story</span></div>
+              <div className="tg-caption">Cost of living, social life, and cafes</div>
+              <div className="tg-body">Taipei is friendly for new nomads; the metro is convenient and the community is active.</div>
             </div>
           </div>
           <div className="tg-list-item">
-            <div className="tg-avatar">事</div>
+            <div className="tg-avatar">S</div>
             <div className="tg-content">
-              <div className="tg-title">在清迈远程的日常<span className="tg-badge">故事</span></div>
-              <div className="tg-caption">慢节奏与工作效率</div>
-              <div className="tg-body">社区空间多，生活节奏慢，适合深度工作与社交。</div>
+              <div className="tg-title">Remote Work Daily in Chiang Mai<span className="tg-badge">Story</span></div>
+              <div className="tg-caption">Slow pace and productivity</div>
+              <div className="tg-body">Plenty of coworking spaces and a slower pace make it great for deep work and socializing.</div>
             </div>
           </div>
         </div>
       </div>
 
       <div className="tg-form-section">
-        <div className="tg-form-header">游民列表</div>
+        <div className="tg-form-header">Nomad List</div>
         <div className="tg-list">
           <div className="tg-list-item">
             <div className="tg-avatar">A</div>
             <div className="tg-content">
-              <div className="tg-title">Alice · 产品经理<span className="tg-badge">附近 1.2km</span></div>
-              <div className="tg-caption">清迈 · Nimman</div>
+              <div className="tg-title">Alice · Product Manager<span className="tg-badge">Nearby 1.2 km</span></div>
+              <div className="tg-caption">Chiang Mai · Nimman</div>
               <div className="tg-actions">
-                <div className="tg-action" onClick={() => alert('已关注 Alice')}>关注</div>
-                <div className="tg-action-primary" onClick={() => alert('已向 Alice 发送好友请求')}>加好友</div>
+                <div className="tg-action" onClick={() => alert('Followed Alice')}>Follow</div>
+                <div className="tg-action-primary" onClick={() => alert('Friend request sent to Alice')}>Add Friend</div>
               </div>
             </div>
           </div>
           <div className="tg-list-item">
             <div className="tg-avatar">B</div>
             <div className="tg-content">
-              <div className="tg-title">Bob · 前端开发<span className="tg-badge">附近 800m</span></div>
-              <div className="tg-caption">曼谷 · Siam</div>
+              <div className="tg-title">Bob · Frontend Developer<span className="tg-badge">Nearby 800 m</span></div>
+              <div className="tg-caption">Bangkok · Siam</div>
               <div className="tg-actions">
-                <div className="tg-action" onClick={() => alert('已关注 Bob')}>关注</div>
-                <div className="tg-action-primary" onClick={() => alert('已向 Bob 发送好友请求')}>加好友</div>
+                <div className="tg-action" onClick={() => alert('Followed Bob')}>Follow</div>
+                <div className="tg-action-primary" onClick={() => alert('Friend request sent to Bob')}>Add Friend</div>
               </div>
             </div>
           </div>
           <div className="tg-list-item">
             <div className="tg-avatar">C</div>
             <div className="tg-content">
-              <div className="tg-title">Carol · 设计师<span className="tg-badge">附近 3.5km</span></div>
-              <div className="tg-caption">巴厘岛 · Canggu</div>
+              <div className="tg-title">Carol · Designer<span className="tg-badge">Nearby 3.5 km</span></div>
+              <div className="tg-caption">Bali · Canggu</div>
               <div className="tg-actions">
-                <div className="tg-action" onClick={() => alert('已关注 Carol')}>关注</div>
-                <div className="tg-action-primary" onClick={() => alert('已向 Carol 发送好友请求')}>加好友</div>
+                <div className="tg-action" onClick={() => alert('Followed Carol')}>Follow</div>
+                <div className="tg-action-primary" onClick={() => alert('Friend request sent to Carol')}>Add Friend</div>
               </div>
             </div>
           </div>
@@ -102,26 +103,26 @@ export default function ExplorePage() {
       </div>
 
       <div className="tg-form-section">
-        <div className="tg-form-header">线下活动</div>
+        <div className="tg-form-header">Offline Events</div>
         <div className="tg-list">
           <div className="tg-list-item">
             <div className="tg-avatar">E</div>
             <div className="tg-content">
-              <div className="tg-title">清迈周末路跑<span className="tg-badge">活动</span></div>
-              <div className="tg-caption">本周日 7:00</div>
-              <div className="tg-body">一起跑步，集合地：Nimman Maya门口。</div>
+              <div className="tg-title">Chiang Mai Weekend Run<span className="tg-badge">Event</span></div>
+              <div className="tg-caption">This Sunday 7:00</div>
+              <div className="tg-body">Let's run together. Meet at: Nimman Maya entrance.</div>
             </div>
           </div>
         </div>
       </div>
 
       <div className="tg-form-section">
-        <div className="tg-form-header">签证/住宿热门榜单</div>
+        <div className="tg-form-header">Visa/Accommodation Top Picks</div>
         <div className="tg-grid">
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">签证热门</div><div className="tg-grid-subtitle">泰国/印尼/新加坡</div></div>
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">住宿热门</div><div className="tg-grid-subtitle">曼谷/清迈/巴厘岛</div></div>
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">性价比</div><div className="tg-grid-subtitle">台北/清迈/胡志明</div></div>
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">办公空间</div><div className="tg-grid-subtitle">清迈/新加坡/首尔</div></div>
+          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Visa Hotspots</div><div className="tg-grid-subtitle">Thailand/Indonesia/Singapore</div></div>
+          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Accommodation Hotspots</div><div className="tg-grid-subtitle">Bangkok/Chiang Mai/Bali</div></div>
+          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Best Value</div><div className="tg-grid-subtitle">Taipei/Chiang Mai/Ho Chi Minh</div></div>
+          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Coworking Spaces</div><div className="tg-grid-subtitle">Chiang Mai/Singapore/Seoul</div></div>
         </div>
       </div>
     </div>

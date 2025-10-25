@@ -7,17 +7,17 @@ type Task = { icon: string; title: string; reward: number }
 const TASKS: Record<'popular' | 'onchain' | 'invite', Task[]> = {
   popular: [
     { icon: 'UP', title: 'Post a Story', reward: 60 },
-    { icon: '聊', title: '加一位数字游民为好友', reward: 60 },
-    { icon: '名', title: '完成个人简介', reward: 60 },
+    { icon: '聊', title: 'Add a nomad as a friend', reward: 60 },
+    { icon: '名', title: 'Complete your profile', reward: 60 },
   ],
   onchain: [
-    { icon: '链', title: '完成一次链上存款', reward: 40 },
-    { icon: '桥', title: '使用二维码扫码支付一次', reward: 80 },
+    { icon: '链', title: 'Make an on-chain deposit', reward: 40 },
+    { icon: '桥', title: 'Pay once via QR code', reward: 80 },
   ],
   invite: [
-    { icon: 'SIM', title: '购买 Solana SIM 一月套餐', reward: 300 },
-    { icon: 'ID', title: '购买 SNS ID 域名', reward: 200 },
-    { icon: 'Gib', title: '在 Gibwork 浏览工作', reward: 60 },
+    { icon: 'SIM', title: 'Purchase Solana SIM 1-month plan', reward: 300 },
+    { icon: 'ID', title: 'Buy an SNS ID domain', reward: 200 },
+    { icon: 'Gib', title: 'Browse jobs on Gibwork', reward: 60 },
   ],
 }
 
@@ -27,7 +27,7 @@ export default function EarnPage() {
   const wwTotal = 31615
   const claimCount = 21
 
-  const onAction = (task: Task) => alert(`执行任务：${task.title}`)
+  const onAction = (task: Task) => alert(`Perform task: ${task.title}`)
 
   const list: Task[] = TASKS[tab as 'popular' | 'onchain' | 'invite'] ?? []
 
@@ -40,10 +40,10 @@ export default function EarnPage() {
             {wwTotal}
             <span className="ww-unit">WW</span>
           </div>
-          <div className="ww-claim">领取 {claimCount}</div>
+          <div className="ww-claim">Claims {claimCount}</div>
         </div>
         <div className="ww-right" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button className="ww-button" onClick={() => setTab('invite')}>邀请好友</button>
+          <button className="ww-button" onClick={() => setTab('invite')}>Invite Friends</button>
           <div className="ww-badge">WW</div>
         </div>
       </div>
@@ -51,13 +51,13 @@ export default function EarnPage() {
       {/* 顶部标签切换 */}
       <div className="ww-tabs">
         <div className={`ww-tab ${tab === 'popular' ? 'active' : ''}`} onClick={() => setTab('popular')}>
-          热门任务
+          Popular
         </div>
         <div className={`ww-tab ${tab === 'onchain' ? 'active' : ''}`} onClick={() => setTab('onchain')}>
-          链上/支付交互任务
+          On-chain/Payment
         </div>
         <div className={`ww-tab ${tab === 'invite' ? 'active' : ''}`} onClick={() => setTab('invite')}>
-          solana生态项目交互
+          Solana Ecosystem
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function EarnPage() {
             </div>
             <div className="ww-right">
               <button className="ww-button" onClick={() => onAction(task)}>
-                赚取
+                Earn
               </button>
             </div>
           </div>

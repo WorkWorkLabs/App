@@ -9,11 +9,11 @@ type Tab = {
 };
 
 const tabs: Tab[] = [
-  { href: "/explore", label: "探索", icon: 'explore' },
-  { href: "/feed", label: "广场", icon: 'feed' },
-  { href: "/apps", label: "应用", icon: 'apps' },
-  { href: "/earn", label: "任务", icon: 'earn' },
-  { href: "/me", label: "我的", icon: 'me' },
+  { href: "/explore", label: "Explore", icon: 'explore' },
+  { href: "/feed", label: "Feed", icon: 'feed' },
+  { href: "/apps", label: "Apps", icon: 'apps' },
+  { href: "/earn", label: "Earn", icon: 'earn' },
+  { href: "/me", label: "Me", icon: 'me' },
 ];
 
 function TabIcon({ name }: { name: Tab['icon'] }) {
