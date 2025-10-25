@@ -2,7 +2,13 @@
 export default function ExplorePage() {
   return (
     <div className="page" id="explore">
-      <div className="tg-header"><h1>探索 Explore</h1></div>
+      <div className="tg-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h1>探索 Explore</h1>
+        <div className="tg-location" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 14, color: 'var(--tg-theme-subtitle-text-color)' }}>当前位置</span>
+          <span className="ww-chip">深圳</span>
+        </div>
+      </div>
 
       <div className="tg-form-section">
         <div className="tg-form-header">城市推荐</div>
@@ -51,6 +57,45 @@ export default function ExplorePage() {
               <div className="tg-title">在清迈远程的日常<span className="tg-badge">故事</span></div>
               <div className="tg-caption">慢节奏与工作效率</div>
               <div className="tg-body">社区空间多，生活节奏慢，适合深度工作与社交。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="tg-form-section">
+        <div className="tg-form-header">游民列表</div>
+        <div className="tg-list">
+          <div className="tg-list-item">
+            <div className="tg-avatar">A</div>
+            <div className="tg-content">
+              <div className="tg-title">Alice · 产品经理<span className="tg-badge">附近 1.2km</span></div>
+              <div className="tg-caption">清迈 · Nimman</div>
+              <div className="tg-actions">
+                <div className="tg-action" onClick={() => alert('已关注 Alice')}>关注</div>
+                <div className="tg-action-primary" onClick={() => alert('已向 Alice 发送好友请求')}>加好友</div>
+              </div>
+            </div>
+          </div>
+          <div className="tg-list-item">
+            <div className="tg-avatar">B</div>
+            <div className="tg-content">
+              <div className="tg-title">Bob · 前端开发<span className="tg-badge">附近 800m</span></div>
+              <div className="tg-caption">曼谷 · Siam</div>
+              <div className="tg-actions">
+                <div className="tg-action" onClick={() => alert('已关注 Bob')}>关注</div>
+                <div className="tg-action-primary" onClick={() => alert('已向 Bob 发送好友请求')}>加好友</div>
+              </div>
+            </div>
+          </div>
+          <div className="tg-list-item">
+            <div className="tg-avatar">C</div>
+            <div className="tg-content">
+              <div className="tg-title">Carol · 设计师<span className="tg-badge">附近 3.5km</span></div>
+              <div className="tg-caption">巴厘岛 · Canggu</div>
+              <div className="tg-actions">
+                <div className="tg-action" onClick={() => alert('已关注 Carol')}>关注</div>
+                <div className="tg-action-primary" onClick={() => alert('已向 Carol 发送好友请求')}>加好友</div>
+              </div>
             </div>
           </div>
         </div>
