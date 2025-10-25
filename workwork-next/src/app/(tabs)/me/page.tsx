@@ -161,6 +161,7 @@ export default function MePage() {
           </div>
         </div>
         <div className="tg-button-group">
+          <Link href="/me/products" className="tg-button tg-button-primary">我的产品/服务</Link>
           <button className="tg-button tg-button-secondary" onClick={() => { const url = `${window?.location?.origin ?? ''}/me`; navigator.clipboard?.writeText(url); alert('已复制名片链接'); }}>分享名片</button>
           <button className="tg-button tg-button-secondary" onClick={() => alert('编辑主页（占位）')}>编辑主页</button>
         </div>
@@ -180,6 +181,12 @@ export default function MePage() {
           <div className="ww-right" style={{ display: 'flex', gap: 8 }}>
             <button className="ww-button" onClick={connected || okxConnected ? onDisconnect : connectWallet}>{connected || okxConnected ? '断开' : '连接 Phantom'}</button>
             <button className="ww-button" onClick={okxConnected ? disconnectOkx : connectOkx}>{okxConnected ? '断开 OKX' : '连接 OKX'}</button>
+            {(connected || okxConnected) && (
+              <>
+                <button className="ww-button" onClick={() => alert('Solayer Card（占位）')}>Solayer Card</button>
+                <button className="ww-button" onClick={() => alert('质押生息（占位）')}>质押生息</button>
+              </>
+            )}
           </div>
         </div>
 

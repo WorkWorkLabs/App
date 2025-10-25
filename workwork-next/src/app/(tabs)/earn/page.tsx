@@ -15,8 +15,9 @@ const TASKS: Record<'popular' | 'onchain' | 'invite', Task[]> = {
     { icon: '桥', title: '使用二维码扫码支付一次', reward: 80 },
   ],
   invite: [
-    { icon: '邀', title: '邀请 1 位好友加入', reward: 100 },
-    { icon: '邀', title: '邀请 5 位好友加入', reward: 600 },
+    { icon: 'SIM', title: '购买 Solana SIM 一月套餐', reward: 300 },
+    { icon: 'ID', title: '购买 SNS ID 域名', reward: 200 },
+    { icon: 'Gib', title: '在 Gibwork 浏览工作', reward: 60 },
   ],
 }
 
