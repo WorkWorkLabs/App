@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
 import { useWallet, useConnection } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
 
@@ -189,7 +190,6 @@ export default function MePage() {
             <div className="ww-card-subtitle">用于联系人场景与任务悬赏，可按使用消耗</div>
             <div className="ww-row" style={{ marginTop: 8 }}>
               <span className="ww-chip">状态：未注册</span>
-              <button className="ww-button" onClick={() => alert('注册获取 WorkWork Pass')}>注册获取</button>
               <button className="ww-button" onClick={() => alert('购买（后续开放）')}>购买</button>
             </div>
           </div>
@@ -201,7 +201,7 @@ export default function MePage() {
             <div className="ww-card-title">🪙 积分系统</div>
             <div className="ww-row" style={{ marginTop: 8 }}>
               <span className="ww-chip">余额 31,615 WW</span>
-              <button className="ww-button" onClick={() => alert('进入 Earn')}>Earn</button>
+              <Link href="/earn" className="ww-button">Earn</Link>
             </div>
             <div className="ww-progress">
               <div className="ww-progress-bar"><div className="ww-progress-fill" /></div>

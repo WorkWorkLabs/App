@@ -6,10 +6,9 @@ type Task = { icon: string; title: string; reward: number }
 
 const TASKS: Record<'popular' | 'onchain' | 'invite', Task[]> = {
   popular: [
-    { icon: 'X', title: '下载 UXUY APP 2.0!', reward: 60 },
     { icon: 'UP', title: 'Post a Story', reward: 60 },
     { icon: '聊', title: '将 @UXUYAgentBot 添加到群组', reward: 60 },
-    { icon: '名', title: '将邀请链接添加到个人简介', reward: 60 },
+    { icon: '名', title: '完成个人简介', reward: 60 },
   ],
   onchain: [
     { icon: '链', title: '完成一次链上存款', reward: 40 },
