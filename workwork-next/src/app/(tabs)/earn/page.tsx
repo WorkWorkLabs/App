@@ -41,7 +41,10 @@ export default function EarnPage() {
           </div>
           <div className="ww-claim">领取 {claimCount}</div>
         </div>
-        <div className="ww-badge">WW</div>
+        <div className="ww-right" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button className="ww-button" onClick={() => setTab('invite')}>邀请好友</button>
+          <div className="ww-badge">WW</div>
+        </div>
       </div>
 
       {/* 顶部标签切换 */}

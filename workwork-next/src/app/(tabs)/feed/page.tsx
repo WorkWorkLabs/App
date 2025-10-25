@@ -1,9 +1,11 @@
 'use client'
 import SegmentedControl from "@/components/SegmentedControl";
+import { useRouter } from "next/navigation";
 
 export default function FeedPage() {
+  const router = useRouter();
   const onLoginClick = () => {
-    alert("推荐使用钱包登录，支持TON和Kaia链");
+    router.push('/me');
   };
   const onContact = (points: number) => {
     alert(`需要登录并消耗${points}积分才能联系发布者`);
