@@ -29,7 +29,7 @@ export default function EarnPage() {
 
   const onAction = (task: Task) => alert(`执行任务：${task.title}`)
 
-  const list: Task[] = TASKS[tab as 'popular' | 'onchain' | 'invite']
+  const list: Task[] = TASKS[tab as 'popular' | 'onchain' | 'invite'] ?? []
 
   return (
     <div className="page" id="earn">
@@ -51,10 +51,10 @@ export default function EarnPage() {
           热门任务
         </div>
         <div className={`ww-tab ${tab === 'onchain' ? 'active' : ''}`} onClick={() => setTab('onchain')}>
-          存款交互任务
+          链上/支付交互任务
         </div>
         <div className={`ww-tab ${tab === 'invite' ? 'active' : ''}`} onClick={() => setTab('invite')}>
-          邀请赛
+          solana生态项目交互
         </div>
       </div>
 

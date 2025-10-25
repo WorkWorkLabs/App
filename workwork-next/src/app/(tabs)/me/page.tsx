@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useWallet, useConnection } from '@solana/wallet-adapter-react'
-import { LAMPORTS_PER_SOL } from '@solana/web3.js'
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
 
 function copy(text: string) {
   navigator.clipboard?.writeText(text)
@@ -17,20 +17,24 @@ export default function MePage() {
   const { publicKey, connected, connect, disconnect } = useWallet()
   const [solBalance, setSolBalance] = React.useState(null as number | null)
   const [points, setPoints] = React.useState(null as number | null)
-  const address = publicKey?.toBase58() || null
+  // OKX 扩展直连（无需额外依赖）；如存在 window.okxwallet.solana
+  const [okxAddress, setOkxAddress] = React.useState(null as string | null)
+  const [okxConnected, setOkxConnected] = React.useState(false)
+  const activeAddress = okxAddress ?? publicKey?.toBase58() ?? null
 
   React.useEffect(() => {
     let cancelled = false
     async function load() {
-      if (publicKey) {
+      const addr = activeAddress
+      if (addr) {
         try {
-          const lamports = await connection.getBalance(publicKey)
+          const lamports = await connection.getBalance(new PublicKey(addr))
           if (!cancelled) setSolBalance(lamports / LAMPORTS_PER_SOL)
         } catch (e) {
           console.error('getBalance error', e)
         }
         try {
-          const res = await fetch(`/api/points?address=${publicKey.toBase58()}`)
+          const res = await fetch(`/api/points?address=${addr}`)
           const json = await res.json()
           if (!cancelled) setPoints(json.points ?? 0)
         } catch (e) {
@@ -43,8 +47,9 @@ export default function MePage() {
     }
     load()
     return () => { cancelled = true }
-  }, [publicKey, connection])
+  }, [activeAddress, connection])
 
+  // 连接 Phantom（保持原逻辑）
   const connectWallet = async () => {
     try {
       await connect()
@@ -52,6 +57,84 @@ export default function MePage() {
       alert('连接失败，请确认已安装 Phantom')
       console.error(e)
     }
+  }
+
+  // 连接 OKX 扩展：优先使用 window.okxwallet.solana 接口
+  const connectOkx = async () => {
+    try {
+      const okx = (window as any)?.okxwallet?.solana
+      if (!okx) {
+        alert('检测不到 OKX Wallet 扩展。请安装浏览器扩展，或稍后接入 OKX Connect（移动端）。')
+        return
+      }
+
+      const normalizeOkxAddress = (keyLike: any): string | null => {
+        try {
+          if (!keyLike) return null
+          // PublicKey 实例
+          if (typeof keyLike?.toBase58 === 'function') {
+            return keyLike.toBase58()
+          }
+          // Uint8Array
+          if (typeof Uint8Array !== 'undefined' && keyLike instanceof Uint8Array) {
+            return new PublicKey(keyLike).toBase58()
+          }
+          // 字符串 -> 验证为有效 base58 公钥
+          if (typeof keyLike === 'string') {
+            return new PublicKey(keyLike).toBase58()
+          }
+          // 可能包装对象 { publicKey: ..., address: ... }
+          if (keyLike?.publicKey) return normalizeOkxAddress(keyLike.publicKey)
+          if (keyLike?.address) return normalizeOkxAddress(keyLike.address)
+        } catch (err) {
+          console.warn('OKX 地址解析失败:', err)
+          return null
+        }
+        return null
+      }
+
+      let connectResult: any = null
+      try {
+        if (typeof okx.connect === 'function') {
+          connectResult = await okx.connect()
+          console.log('OKX connect() 返回:', connectResult)
+        }
+      } catch (e) {
+        console.warn('okx.connect() 调用失败:', e)
+      }
+
+      const raw = (connectResult ?? okx.publicKey ?? okx.address)
+      console.log('OKX raw publicKey/address:', raw)
+      const addr = normalizeOkxAddress(raw)
+      if (!addr) {
+        alert('OKX Wallet 未返回有效地址，请确认钱包已解锁并授权。')
+        return
+      }
+      setOkxAddress(addr)
+      setOkxConnected(true)
+    } catch (e) {
+      alert('连接 OKX 失败，请重试或检查扩展状态。')
+      console.error(e)
+    }
+  }
+
+  const disconnectOkx = async () => {
+    try {
+      const okx = (window as any)?.okxwallet?.solana
+      if (okx && typeof okx.disconnect === 'function') {
+        await okx.disconnect()
+      }
+    } catch (e) {
+      console.warn('OKX 扩展断开异常', e)
+    } finally {
+      setOkxConnected(false)
+      setOkxAddress(null)
+    }
+  }
+
+  const onDisconnect = async () => {
+    if (okxConnected) return disconnectOkx()
+    return disconnect()
   }
 
   return (
@@ -62,8 +145,8 @@ export default function MePage() {
         <div className="ww-profile-main">
           <div className="tg-title" style={{ fontSize: 16 }}>{username}</div>
           <div className="ww-addr">
-            <span>Solana: {address ?? '未连接'}</span>
-            <span className="ww-copy" onClick={() => copy(address ?? '')}>复制</span>
+            <span>Solana: {activeAddress ?? '未连接'}</span>
+            <span className="ww-copy" onClick={() => copy(activeAddress ?? '')}>复制</span>
           </div>
           <div className="ww-social">
             <div className="ww-icon" aria-label="X">X</div>
@@ -93,8 +176,9 @@ export default function MePage() {
               <span className="ww-chip">积分: {points ?? '-'}</span>
             </div>
           </div>
-          <div className="ww-right">
-            <button className="ww-button" onClick={connected ? disconnect : connectWallet}>{connected ? '断开' : '连接'}</button>
+          <div className="ww-right" style={{ display: 'flex', gap: 8 }}>
+            <button className="ww-button" onClick={connected || okxConnected ? onDisconnect : connectWallet}>{connected || okxConnected ? '断开' : '连接 Phantom'}</button>
+            <button className="ww-button" onClick={okxConnected ? disconnectOkx : connectOkx}>{okxConnected ? '断开 OKX' : '连接 OKX'}</button>
           </div>
         </div>
 
@@ -171,12 +255,6 @@ export default function MePage() {
         <div className="ww-card">
           <div>
             <div className="ww-card-title">👣 足迹</div>
-            <div className="ww-card-subtitle">链上行为可视化（活动参与、任务记录）</div>
-            <div className="ww-timeline" style={{ marginTop: 8 }}>
-              <div className="ww-timeline-item">Mint Explorer Badge</div>
-              <div className="ww-timeline-item">兑换 WW → USDC (Jupiter)</div>
-              <div className="ww-timeline-item">报名 Nomad Meetup (Solana Pay)</div>
-            </div>
           </div>
         </div>
       </div>
