@@ -1,10 +1,21 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { Typography, Space, Tag, Button, Input, List, Avatar, message, Divider } from 'antd'
 
 const { Title, Text, Paragraph } = Typography
+
+// 本地发布帖类型 & 存储键
+type PublishedPost = {
+  id: string
+  title: string
+  location?: string
+  caption?: string
+  body: string
+  createdAt: number
+}
+const STORAGE_KEY = 'WW_PUBLISHED_POSTS'
 
 // --- Mock types & data ---
 interface CommentItem {
@@ -26,6 +37,9 @@ interface PostDetail {
   likes: number
   tips: number
   comments: CommentItem[]
+  caption?: string
+  createdAt?: number
+  isLocal?: boolean
 }
 
 const MOCK_POSTS: Record<string, PostDetail> = {
@@ -70,8 +84,48 @@ const MOCK_POSTS: Record<string, PostDetail> = {
 export default function ExploreDetailPage({ params }: { params: { id?: string } }) {
   const id = params?.id ?? 'story-1'
 
-  const [post, setPost] = React.useState(MOCK_POSTS[id] ?? MOCK_POSTS['story-1'])
+  const initialPost: PostDetail = MOCK_POSTS[id] ?? {
+    id,
+    title: '正在加载...',
+    author: 'You',
+    location: 'Unknown',
+    tags: [],
+    content: [],
+    likes: 0,
+    tips: 0,
+    comments: [],
+    isLocal: true,
+  }
+  const [post, setPost] = React.useState(initialPost)
   const [commentText, setCommentText] = React.useState('')
+
+  // 如果本地有发布帖与当前 id 匹配，则加载并转换为详情结构
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (raw) {
+        const list = JSON.parse(raw) as PublishedPost[]
+        const found = list.find((p) => String(p.id) === String(id))
+        if (found) {
+          const detail: PostDetail = {
+            id: found.id,
+            title: found.title,
+            author: 'You',
+            location: found.location ?? 'Unknown',
+            tags: [],
+            caption: found.caption,
+            content: found.body ? [found.body] : [],
+            createdAt: found.createdAt,
+            likes: 0,
+            tips: 0,
+            comments: [],
+            isLocal: true,
+          }
+          setPost(detail)
+        }
+      }
+    } catch (err) {}
+  }, [id])
 
   const likeCountLabel = useMemo(() => `${post.likes} 赞`, [post.likes])
   const tipCountLabel = useMemo(() => `${post.tips} 人打赏`, [post.tips])
@@ -127,6 +181,7 @@ export default function ExploreDetailPage({ params }: { params: { id?: string } 
               <Space direction="vertical" size={0}>
                 <Text strong>{post.author}</Text>
                 <Text type="secondary">{post.location}</Text>
+                {post.createdAt ? <Text type="secondary">{new Date(post.createdAt).toLocaleString()}</Text> : null}
               </Space>
             </Space>
           </Space>
@@ -142,6 +197,7 @@ export default function ExploreDetailPage({ params }: { params: { id?: string } 
         {/* 正文 */}
         <Space direction="vertical" size={8} style={{ width: '100%', padding: 16, background: 'var(--tg-theme-secondary-bg-color)', borderRadius: 8 }}>
           <Title level={5} style={{ margin: 0 }}>正文</Title>
+          {post.caption && <Paragraph style={{ marginBottom: 8 }}>{post.caption}</Paragraph>}
           {post.content.map((p: string, idx: number) => (
             <Paragraph key={idx} style={{ marginBottom: 8 }}>{p}</Paragraph>
           ))}
