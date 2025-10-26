@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SolanaProvider from "../components/SolanaProvider";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider, theme } from "antd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +28,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <SolanaProvider>{children}</SolanaProvider>
+        <AntdRegistry>
+          <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
+            <SolanaProvider>{children}</SolanaProvider>
+          </ConfigProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

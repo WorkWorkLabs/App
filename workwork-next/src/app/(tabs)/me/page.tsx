@@ -4,6 +4,8 @@ import React from 'react'
 import Link from 'next/link'
 import { useWallet, useConnection } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
+import { Space, Card, Avatar, Typography, Tag, Button, Progress, Row, Col } from 'antd'
+const ACard: any = Card
 
 function copy(text: string) {
   navigator.clipboard?.writeText(text)
@@ -178,140 +180,140 @@ export default function MePage() {
   }
   return (
     <div className="page" id="me">
-      {/* 顶部 Header：头像 / 名称+地址 / 徽章 / 按钮组 */}
-      <div className="ww-profile-header">
-        {avatarDataUrl ? (
-          <img src={avatarDataUrl} alt="Avatar" className="tg-avatar tg-avatar-large" style={{ objectFit: 'cover' }} onError={() => setAvatarDataUrl(null)} />
-        ) : avatarExists ? (
-          <img src="/me-avatar.png" alt="Avatar" className="tg-avatar tg-avatar-large" style={{ objectFit: 'cover' }} onError={() => setAvatarExists(false)} />
-        ) : (
-          <div className="tg-avatar tg-avatar-large">NFT</div>
-        )}
-        <div className="ww-profile-main">
-          <div className="tg-title" style={{ fontSize: 16 }}>{username}</div>
-          <div className="ww-addr">
-            <span>Solana: {activeAddress ?? 'Not connected'}</span>
-            <span className="ww-copy" onClick={() => copy(activeAddress ?? '')}>Copy</span>
-          </div>
-          <div className="ww-social">
-            <div className="ww-icon" aria-label="X">X</div>
-            <div className="ww-icon" aria-label="GitHub">GH</div>
-            <div className="ww-icon" aria-label="Telegram">TG</div>
-            <div className="ww-icon" aria-label="LinkedIn">in</div>
-          </div>
-          <div className="ww-badge-nft">
-            <span className="ww-chip">Level {level}</span>
-            <span className="ww-chip">Badge: Explorer</span>
-          </div>
-        </div>
-        <div className="tg-button-group">
-          <Link href="/me/products" className="tg-button tg-button-primary">My Products/Services</Link>
-          <button className="tg-button tg-button-secondary" onClick={() => { const url = `${window?.location?.origin ?? ''}/me`; navigator.clipboard?.writeText(url); alert('Card link copied'); }}>Share Card</button>
-          <button className="tg-button tg-button-secondary" onClick={() => alert('Edit Home (placeholder)')}>Edit Home</button>
-          <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={onAvatarFileChange} />
-          <button className="tg-button tg-button-secondary" onClick={() => fileInputRef.current?.click()}>Change Avatar</button>
-          {avatarDataUrl && <button className="tg-button tg-button-secondary" onClick={onClearAvatar}>Clear Avatar</button>}
-        </div>
-      </div>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <ACard>
+          <Space align="center" size="large" wrap style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Space align="center" size="large">
+              {avatarDataUrl || avatarExists ? (
+                <Avatar
+                  size={80}
+                  src={avatarDataUrl || (avatarExists ? '/me-avatar.png' : undefined)}
+                  onError={() => {
+                    if (avatarDataUrl) setAvatarDataUrl(null)
+                    if (avatarExists) setAvatarExists(false)
+                    return false
+                  }}
+                />
+              ) : (
+                <Avatar size={80}>NFT</Avatar>
+              )}
+              <div>
+                <Typography.Title level={5} style={{ marginBottom: 8 }}>{username}</Typography.Title>
+                <Space size="small">
+                  <Typography.Text>Solana: {activeAddress ?? 'Not connected'}</Typography.Text>
+                  <Button size="small" onClick={() => copy(activeAddress ?? '')}>Copy</Button>
+                </Space>
+                <Space size="small" style={{ marginTop: 8 }}>
+                  <Tag>X</Tag>
+                  <Tag>GH</Tag>
+                  <Tag>TG</Tag>
+                  <Tag>in</Tag>
+                </Space>
+                <Space size="small" style={{ marginTop: 8 }}>
+                  <Tag>Level {level}</Tag>
+                  <Tag color="blue">Badge: Explorer</Tag>
+                </Space>
+              </div>
+            </Space>
+            <Space wrap>
+              <Link href="/me/products"><Button type="primary">My Products/Services</Button></Link>
+              <Button onClick={() => { const url = `${window?.location?.origin ?? ''}/me`; navigator.clipboard?.writeText(url); alert('Card link copied'); }}>Share Card</Button>
+              <Button onClick={() => alert('Edit Home (placeholder)')}>Edit Home</Button>
+              <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={onAvatarFileChange} />
+              <Button onClick={() => fileInputRef.current?.click()}>Change Avatar</Button>
+              {avatarDataUrl && <Button onClick={onClearAvatar}>Clear Avatar</Button>}
+            </Space>
+          </Space>
+        </ACard>
 
-      {/* 模块布局（卡片式） */}
-      <div className="ww-stack" style={{ marginTop: 12 }}>
-        {/* 钱包 Wallet */}
-        <div className="ww-card">
-          <div>
-            <div className="ww-card-title">💎 Wallet</div>
-            <div className="ww-row" style={{ marginTop: 8 }}>
-              <span className="ww-chip">SOL: {solBalance !== null ? solBalance.toFixed(4) : '-'}</span>
-              <span className="ww-chip">Points: {points ?? '-'}</span>
-            </div>
-          </div>
-          <div className="ww-right" style={{ display: 'flex', gap: 8 }}>
-            <button className="ww-button" onClick={connected || okxConnected ? onDisconnect : connectWallet}>{connected || okxConnected ? 'Disconnect' : 'Connect Phantom'}</button>
-            <button className="ww-button" onClick={okxConnected ? disconnectOkx : connectOkx}>{okxConnected ? 'Disconnect OKX' : 'Connect OKX'}</button>
+        <ACard title="💎 Wallet" extra={
+          <Space wrap>
+            <Button onClick={connected || okxConnected ? onDisconnect : connectWallet}>
+              {connected || okxConnected ? 'Disconnect' : 'Connect Phantom'}
+            </Button>
+            <Button onClick={okxConnected ? disconnectOkx : connectOkx}>
+              {okxConnected ? 'Disconnect OKX' : 'Connect OKX'}
+            </Button>
             {(connected || okxConnected) && (
               <>
-                <button className="ww-button" onClick={() => alert('Solayer Card (placeholder)')}>Solayer Card</button>
-                <button className="ww-button" onClick={() => alert('Staking (placeholder)')}>Staking</button>
+                <Button onClick={() => alert('Solayer Card (placeholder)')}>Solayer Card</Button>
+                <Button onClick={() => alert('Staking (placeholder)')}>Staking</Button>
               </>
             )}
-          </div>
-        </div>
+          </Space>
+        }>
+          <Space size="small">
+            <Tag>SOL: {solBalance !== null ? solBalance.toFixed(4) : '-'}</Tag>
+            <Tag>Points: {points ?? '-'}</Tag>
+          </Space>
+        </ACard>
 
-        {/* WorkWork Pass */}
-        <div className="ww-card">
-          <div>
-            <div className="ww-card-title">🎟️ WorkWork Pass</div>
-            <div className="ww-card-subtitle">For contact scenarios and task bounties; consumed per use</div>
-            <div className="ww-row" style={{ marginTop: 8 }}>
-              <span className="ww-chip">Status: Unregistered</span>
-              <button className="ww-button" onClick={() => alert('Purchase (coming soon)')}>Purchase</button>
-            </div>
-          </div>
-        </div>
+        <ACard title="🎟️ WorkWork Pass">
+          <Typography.Text type="secondary">For contact scenarios and task bounties; consumed per use</Typography.Text>
+          <Space style={{ marginTop: 8 }}>
+            <Tag>Status: Unregistered</Tag>
+            <Button onClick={() => alert('Purchase (coming soon)')}>Purchase</Button>
+          </Space>
+        </ACard>
 
-        {/* 积分系统 */}
-        <div className="ww-card">
-          <div>
-            <div className="ww-card-title">🪙 Points System</div>
-            <div className="ww-row" style={{ marginTop: 8 }}>
-              <span className="ww-chip">Balance 31,615 WW</span>
-              <Link href="/earn" className="ww-button">Earn</Link>
-            </div>
-            <div className="ww-progress">
-              <div className="ww-progress-bar"><div className="ww-progress-fill" /></div>
-              <div className="ww-card-subtitle" style={{ marginTop: 4 }}>Growth progress 30%</div>
-            </div>
-          </div>
-        </div>
+        <ACard title="🪙 Points System">
+          <Space style={{ marginBottom: 8 }}>
+            <Tag color="gold">Balance 31,615 WW</Tag>
+            <Link href="/earn"><Button>Earn</Button></Link>
+          </Space>
+          <Progress percent={30} />
+          <Typography.Text type="secondary" style={{ marginTop: 8, display: 'block' }}>
+            Growth progress 30%
+          </Typography.Text>
+        </ACard>
 
-        {/* 发帖与收藏 */}
-        <div className="ww-card">
-          <div>
-            <div className="ww-card-title">🧾 Posts</div>
-            <div className="ww-mini-list" style={{ marginTop: 8 }}>
-              <div className="ww-row"><span className="ww-chip">My posts: 12</span><button className="ww-button" onClick={() => alert('Go to Feed')}>Go to Feed</button></div>
-              <div className="ww-row"><span className="ww-chip">My favorites: 5</span><button className="ww-button" onClick={() => alert('View Favorites')}>Favorites</button></div>
-            </div>
-          </div>
-        </div>
+        <ACard title="🧾 Posts">
+          <Space direction="vertical" style={{ width: '100%' }}>
+            <Space style={{ justifyContent: 'space-between', width: '100%' }}>
+              <Tag>My posts: 12</Tag>
+              <Button onClick={() => alert('Go to Feed')}>Go to Feed</Button>
+            </Space>
+            <Space style={{ justifyContent: 'space-between', width: '100%' }}>
+              <Tag>My favorites: 5</Tag>
+              <Button onClick={() => alert('View Favorites')}>Favorites</Button>
+            </Space>
+          </Space>
+        </ACard>
 
-        {/* 等级与NFT徽章 */}
-        <div className="ww-card">
-          <div>
-            <div className="ww-card-title">🎯 Levels & NFT Badges</div>
-            <div className="ww-card-subtitle">Explorer / Builder / Leader</div>
-            <div className="ww-row" style={{ marginTop: 8 }}>
-              <span className="ww-chip">Explorer ✅</span>
-              <span className="ww-chip">Builder ⏳</span>
-              <span className="ww-chip">Leader ⏳</span>
-            </div>
-            <div className="ww-progress">
-              <div className="ww-progress-bar"><div className="ww-progress-fill" /></div>
-              <div className="ww-card-subtitle" style={{ marginTop: 4 }}>70% remaining to reach LV2</div>
-            </div>
-          </div>
-        </div>
+        <ACard title="🎯 Levels & NFT Badges">
+          <Typography.Text type="secondary">Explorer / Builder / Leader</Typography.Text>
+          <Space style={{ marginTop: 8 }}>
+            <Tag color="green">Explorer</Tag>
+            <Tag>Builder</Tag>
+            <Tag>Leader</Tag>
+          </Space>
+          <Progress percent={30} style={{ marginTop: 8 }} />
+          <Typography.Text type="secondary" style={{ marginTop: 4, display: 'block' }}>
+            70% remaining to reach LV2
+          </Typography.Text>
+        </ACard>
 
-        {/* 订单（我的订单） */}
-        <div className="ww-card">
-          <div>
-            <div className="ww-card-title">My Orders</div>
-            <div className="tg-grid" style={{ marginTop: 8 }}>
-              <div className="tg-grid-item" onClick={() => alert('View pending payment orders')}><div className="tg-grid-icon"></div><div className="tg-grid-title">Pending Payment</div></div>
-              <div className="tg-grid-item" onClick={() => alert('View pending review orders')}><div className="tg-grid-icon"></div><div className="tg-grid-title">Pending Review</div></div>
-              <div className="tg-grid-item" onClick={() => alert('View used orders')}><div className="tg-grid-icon"></div><div className="tg-grid-title">Used</div></div>
-              <div className="tg-grid-item" onClick={() => alert('View all orders')}><div className="tg-grid-icon"></div><div className="tg-grid-title">All Orders</div></div>
-            </div>
-          </div>
-        </div>
+        <ACard title="My Orders">
+          <Row gutter={[12, 12]}>
+            <Col xs={12} sm={12} md={6} lg={6}>
+              <Button block onClick={() => alert('View pending payment orders')}>Pending Payment</Button>
+            </Col>
+            <Col xs={12} sm={12} md={6} lg={6}>
+              <Button block onClick={() => alert('View pending review orders')}>Pending Review</Button>
+            </Col>
+            <Col xs={12} sm={12} md={6} lg={6}>
+              <Button block onClick={() => alert('View used orders')}>Used</Button>
+            </Col>
+            <Col xs={12} sm={12} md={6} lg={6}>
+              <Button block onClick={() => alert('View all orders')}>All Orders</Button>
+            </Col>
+          </Row>
+        </ACard>
 
-        {/* 足迹（链上时间轴） */}
-        <div className="ww-card">
-          <div>
-            <div className="ww-card-title">👣 Footprint</div>
-          </div>
-        </div>
-      </div>
+        <ACard title="👣 Footprint">
+          <Typography.Text type="secondary">Coming soon</Typography.Text>
+        </ACard>
+      </Space>
     </div>
   )
 }
