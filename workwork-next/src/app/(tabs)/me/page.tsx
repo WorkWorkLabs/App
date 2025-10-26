@@ -4,7 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { useWallet, useConnection } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
-import { Space, Card, Avatar, Typography, Tag, Button, Progress, Row, Col } from 'antd'
+import { Space, Card, Avatar, Typography, Tag, Button, Progress, Row, Col, List } from 'antd'
 const ACard: any = Card
 
 function copy(text: string) {
@@ -24,6 +24,32 @@ export default function MePage() {
   const [okxAddress, setOkxAddress] = React.useState(null as string | null)
   const [okxConnected, setOkxConnected] = React.useState(false)
   const activeAddress = okxAddress ?? publicKey?.toBase58() ?? null
+
+  // 邀请注册（mock 数据）
+  type Invite = { code: string; status: 'pending' | 'joined'; createdAt: string }
+  const [invites, setInvites] = React.useState([] as Invite[])
+  React.useEffect(() => {
+    const initial: Invite[] = [
+      { code: 'WW-1A2B3C', status: 'pending', createdAt: new Date().toISOString() },
+      { code: 'WW-4D5E6F', status: 'joined', createdAt: new Date().toISOString() },
+      { code: 'WW-7G8H9I', status: 'pending', createdAt: new Date().toISOString() },
+    ]
+    setInvites(initial)
+  }, [])
+  const resolveInviteUrl = (code: string) => {
+    const origin = typeof window !== 'undefined' ? window.location.origin : ''
+    return `${origin}/register?invite=${code}`
+  }
+  const createInvite = () => {
+    const rand = Math.random().toString(36).slice(2, 8).toUpperCase()
+    const code = `WW-${rand}`
+    setInvites((prev: Invite[]) => [...prev, { code, status: 'pending', createdAt: new Date().toISOString() }])
+    alert('Invite created')
+  }
+  const markJoined = (code: string) => {
+    setInvites((prev: Invite[]) => prev.map(i => i.code === code ? { ...i, status: 'joined' } : i))
+  }
+  const joinedCount = (invites as any[]).filter((i: any) => i.status === 'joined').length
 
   const [avatarExists, setAvatarExists] = React.useState(false)
   const [avatarDataUrl, setAvatarDataUrl] = React.useState(null as string | null)
@@ -265,6 +291,37 @@ export default function MePage() {
           <Typography.Text type="secondary" style={{ marginTop: 8, display: 'block' }}>
             Growth progress 30%
           </Typography.Text>
+        </ACard>
+
+        <ACard title="🎁 Invite Registration" extra={<Button onClick={createInvite}>Generate Invite</Button>}>
+          <Space style={{ marginBottom: 8 }}>
+            <Tag>Total: {invites.length}</Tag>
+            <Tag color="green">Joined: {joinedCount}</Tag>
+          </Space>
+          <List
+            itemLayout="horizontal"
+            dataSource={invites}
+            renderItem={(item: any) => (
+              <List.Item
+                actions={[
+                  <Button size="small" onClick={() => copy(resolveInviteUrl(item.code))}>Copy Link</Button>,
+                  item.status === 'pending'
+                    ? <Button size="small" type="link" onClick={() => markJoined(item.code)}>Mark Joined</Button>
+                    : <Tag color="green">Joined</Tag>
+                ]}
+              >
+                <List.Item.Meta
+                  title={item.code}
+                  description={
+                    <Space direction="vertical" size={0}>
+                      <Typography.Text type="secondary">{new Date(item.createdAt).toLocaleString()}</Typography.Text>
+                      <Typography.Text type="secondary">{resolveInviteUrl(item.code)}</Typography.Text>
+                    </Space>
+                  }
+                />
+              </List.Item>
+            )}
+          />
         </ACard>
 
         <ACard title="🧾 Posts">

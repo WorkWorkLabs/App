@@ -12,6 +12,7 @@
     "@ant-design/cssinjs": "^1.24.0",
     "@ant-design/icons": "^6.1.0",
     "@ant-design/nextjs-registry": "^1.1.0",
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@solana/wallet-adapter-react": "^0.15.39",
     "@solana/wallet-adapter-wallets": "^0.19.37",
     "@solana/web3.js": "^1.98.4",

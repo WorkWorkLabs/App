@@ -4,6 +4,7 @@ import "./globals.css";
 import SolanaProvider from "../components/SolanaProvider";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider, theme } from "antd";
+import AntdCompat from "./antd-compat";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AntdRegistry>
+          <AntdCompat />
           <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
             <SolanaProvider>{children}</SolanaProvider>
           </ConfigProvider>
