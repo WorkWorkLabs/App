@@ -81,8 +81,9 @@ const MOCK_POSTS: Record<string, PostDetail> = {
   }
 }
 
-export default function ExploreDetailPage({ params }: { params: { id?: string } }) {
-  const id = params?.id ?? 'story-1'
+export default function ExploreDetailPage({ params }: { params: Promise<{ id?: string }> }) {
+  const { id: paramId } = React.use(params)
+  const id = paramId ?? 'story-1'
 
   const initialPost: PostDetail = MOCK_POSTS[id] ?? {
     id,
