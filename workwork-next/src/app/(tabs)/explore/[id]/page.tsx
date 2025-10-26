@@ -210,7 +210,7 @@ export default function ExploreDetailPage({ params }: { params: Promise<{ id?: s
           <Space size={12} wrap>
             <Button type="primary" onClick={toggleLike}>{likeCountLabel}</Button>
             <Button onClick={() => tip(5)}>打赏 5</Button>
-            <Button onClick={() => tip(20)}>打赏 20</Button>
+            {/* 移除重复的打赏按钮 */}
             <Tag color="blue" style={{ marginLeft: 8 }}>{tipCountLabel}</Tag>
           </Space>
         </Space>
