@@ -1,0 +1,201 @@
+'use client'
+
+import React, { useMemo } from 'react'
+import Link from 'next/link'
+import { Typography, Space, Tag, Button, Input, List, Avatar, message, Divider } from 'antd'
+
+const { Title, Text, Paragraph } = Typography
+
+// --- Mock types & data ---
+interface CommentItem {
+  id: string
+  author: string
+  avatar: string
+  time: string
+  content: string
+  likes: number
+}
+
+interface PostDetail {
+  id: string
+  title: string
+  author: string
+  location: string
+  tags: string[]
+  content: string[]
+  likes: number
+  tips: number
+  comments: CommentItem[]
+}
+
+const MOCK_POSTS: Record<string, PostDetail> = {
+  'story-1': {
+    id: 'story-1',
+    title: 'A Month in Taipei',
+    author: 'Sam',
+    location: 'Taipei, Taiwan',
+    tags: ['food', 'city', 'budget'],
+    content: [
+      '台北是我最喜欢的城市之一：安全、方便、充满烟火气。',
+      '一个月的远程工作生活成本大约在 1200-1500 USD，地铁和公交非常方便。',
+      '夜市的小吃非常值得每天来一轮，推荐宁夏、师大和罗东夜市。'
+    ],
+    likes: 32,
+    tips: 6,
+    comments: [
+      { id: 'c1', author: 'Lena', avatar: 'L', time: '2h 前', content: '宁夏夜市的胡椒饼太好吃了！', likes: 3 },
+      { id: 'c2', author: 'Kane', avatar: 'K', time: '1d 前', content: '淡水老街适合周末散步，日落很美。', likes: 5 }
+    ]
+  },
+  'story-2': {
+    id: 'story-2',
+    title: 'Remote Work Daily in Chiang Mai',
+    author: 'April',
+    location: 'Chiang Mai, Thailand',
+    tags: ['remote-work', 'coffee', 'budget'],
+    content: [
+      '清迈是数字游民的天堂，咖啡馆密度高且网络稳定。',
+      '租房价格友好，老城步行可达的共享办公点很多。',
+      '建议每周安排一次山间机车短途，放空效率更高。'
+    ],
+    likes: 54,
+    tips: 11,
+    comments: [
+      { id: 'c3', author: 'Mo', avatar: 'M', time: '5h 前', content: '早上 8 点前跑到素贴山人少风景好。', likes: 2 },
+      { id: 'c4', author: 'Lee', avatar: 'L', time: '3d 前', content: '尼曼的咖啡店真的太多了，推荐 Roast8。', likes: 7 }
+    ]
+  }
+}
+
+export default function ExploreDetailPage({ params }: { params: { id?: string } }) {
+  const id = params?.id ?? 'story-1'
+
+  const [post, setPost] = React.useState(MOCK_POSTS[id] ?? MOCK_POSTS['story-1'])
+  const [commentText, setCommentText] = React.useState('')
+
+  const likeCountLabel = useMemo(() => `${post.likes} 赞`, [post.likes])
+  const tipCountLabel = useMemo(() => `${post.tips} 人打赏`, [post.tips])
+
+  const toggleLike = () => {
+    setPost((p: PostDetail) => ({ ...p, likes: p.likes + 1 }))
+    message.success('已点赞')
+  }
+
+  const tip = (amount: number) => {
+    setPost((p: PostDetail) => ({ ...p, tips: p.tips + 1 }))
+    message.success(`已打赏 ${amount} 元（Mock）`)
+  }
+
+  const addComment = () => {
+    const text = commentText.trim()
+    if (!text) {
+      message.warning('请输入评论内容')
+      return
+    }
+    const newItem: CommentItem = {
+      id: `c${Date.now()}`,
+      author: 'You',
+      avatar: 'Y',
+      time: '刚刚',
+      content: text,
+      likes: 0
+    }
+    setPost((p: PostDetail) => ({ ...p, comments: [newItem, ...p.comments] }))
+    setCommentText('')
+    message.success('评论已发布（Mock）')
+  }
+
+  const likeComment = (cid: string) => {
+    setPost((p: PostDetail) => ({
+      ...p,
+      comments: p.comments.map((c: CommentItem) => c.id === cid ? { ...c, likes: c.likes + 1 } : c)
+    }))
+  }
+
+  return (
+    <div style={{ padding: 24 }}>
+      <Space direction="vertical" size={16} style={{ width: '100%' }}>
+        {/* 顶部信息 */}
+        <Space direction="vertical" size={8} style={{ width: '100%', padding: 16, background: 'var(--tg-theme-secondary-bg-color)', borderRadius: 8 }}>
+          <Space align="start" style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Space size={12}>
+              <Link href="/explore" prefetch={false} style={{ textDecoration: 'none', color: 'inherit' }}>返回探索</Link>
+              <Title level={4} style={{ margin: 0 }}>{post.title}</Title>
+            </Space>
+            <Space>
+              <Avatar>{post.author.charAt(0).toUpperCase()}</Avatar>
+              <Space direction="vertical" size={0}>
+                <Text strong>{post.author}</Text>
+                <Text type="secondary">{post.location}</Text>
+              </Space>
+            </Space>
+          </Space>
+          <Space wrap>
+            {post.tags.map((t: string) => (
+              <Tag key={t}>{t}</Tag>
+            ))}
+          </Space>
+        </Space>
+
+        <Divider style={{ margin: '8px 0' }} />
+
+        {/* 正文 */}
+        <Space direction="vertical" size={8} style={{ width: '100%', padding: 16, background: 'var(--tg-theme-secondary-bg-color)', borderRadius: 8 }}>
+          <Title level={5} style={{ margin: 0 }}>正文</Title>
+          {post.content.map((p: string, idx: number) => (
+            <Paragraph key={idx} style={{ marginBottom: 8 }}>{p}</Paragraph>
+          ))}
+        </Space>
+
+        {/* 互动 */}
+        <Space direction="vertical" size={8} style={{ width: '100%', padding: 16, background: 'var(--tg-theme-secondary-bg-color)', borderRadius: 8 }}>
+          <Title level={5} style={{ margin: 0 }}>互动</Title>
+          <Space size={12} wrap>
+            <Button type="primary" onClick={toggleLike}>{likeCountLabel}</Button>
+            <Button onClick={() => tip(5)}>打赏 5</Button>
+            <Button onClick={() => tip(20)}>打赏 20</Button>
+            <Tag color="blue" style={{ marginLeft: 8 }}>{tipCountLabel}</Tag>
+          </Space>
+        </Space>
+
+        {/* 评论 */}
+        <Space direction="vertical" size={12} style={{ width: '100%', padding: 16, background: 'var(--tg-theme-secondary-bg-color)', borderRadius: 8 }}>
+          <Title level={5} style={{ margin: 0 }}>评论</Title>
+          <Space.Compact style={{ width: '100%' }}>
+            <Input
+              placeholder="写下你的看法..."
+              value={commentText}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCommentText(e.target.value)}
+            />
+            <Button type="primary" onClick={addComment}>发布</Button>
+          </Space.Compact>
+
+          <List
+            itemLayout="horizontal"
+            dataSource={post.comments as CommentItem[]}
+            renderItem={(item: CommentItem) => (
+              <List.Item
+                actions={[
+                  <Button key={`like-${item.id}`} type="link" size="small" onClick={() => likeComment(item.id)}>
+                    赞同 {item.likes}
+                  </Button>
+                ]}
+              >
+                <List.Item.Meta
+                  avatar={<Avatar>{item.avatar}</Avatar>}
+                  title={
+                    <Space size={8}>
+                      <Text strong>{item.author}</Text>
+                      <Tag>{item.time}</Tag>
+                    </Space>
+                  }
+                  description={<Text>{item.content}</Text>}
+                />
+              </List.Item>
+            )}
+          />
+        </Space>
+      </Space>
+    </div>
+  )
+}

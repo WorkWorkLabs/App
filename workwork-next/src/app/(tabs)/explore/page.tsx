@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 export default function ExplorePage() {
   return (
     <div className="page" id="explore">
@@ -44,22 +45,22 @@ export default function ExplorePage() {
       <div className="tg-form-section">
         <div className="tg-form-header">Nomad Stories</div>
         <div className="tg-list">
-          <div className="tg-list-item">
+          <Link href="/explore/story-1" className="tg-list-item" prefetch={false} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div className="tg-avatar">S</div>
             <div className="tg-content">
               <div className="tg-title">A Month in Taipei<span className="tg-badge">Story</span></div>
               <div className="tg-caption">Cost of living, social life, and cafes</div>
               <div className="tg-body">Taipei is friendly for new nomads; the metro is convenient and the community is active.</div>
             </div>
-          </div>
-          <div className="tg-list-item">
+          </Link>
+          <Link href="/explore/story-2" className="tg-list-item" prefetch={false} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div className="tg-avatar">S</div>
             <div className="tg-content">
               <div className="tg-title">Remote Work Daily in Chiang Mai<span className="tg-badge">Story</span></div>
               <div className="tg-caption">Slow pace and productivity</div>
               <div className="tg-body">Plenty of coworking spaces and a slower pace make it great for deep work and socializing.</div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
 
