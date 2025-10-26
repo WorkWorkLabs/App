@@ -2,7 +2,7 @@
 
 import React, { useMemo, useEffect } from 'react'
 import Link from 'next/link'
-import { Typography, Space, Tag, Button, Input, List, Avatar, message, Divider } from 'antd'
+import { Typography, Space, Tag, Button, Input, List, Avatar, message, Divider, Modal } from 'antd'
 
 const { Title, Text, Paragraph } = Typography
 
@@ -16,6 +16,9 @@ type PublishedPost = {
   createdAt: number
 }
 const STORAGE_KEY = 'WW_PUBLISHED_POSTS'
+const PASS_STORAGE_KEY = 'WW_NOMAD_PASS_COUNT'
+const PASS_REGISTERED_KEY = 'WW_NOMAD_PASS_REGISTERED'
+const PASS_HISTORY_KEY = 'WW_NOMAD_PASS_HISTORY'
 
 // --- Mock types & data ---
 interface CommentItem {
@@ -99,6 +102,9 @@ export default function ExploreDetailPage({ params }: { params: Promise<{ id?: s
   }
   const [post, setPost] = React.useState(initialPost)
   const [commentText, setCommentText] = React.useState('')
+  const [passCount, setPassCount] = React.useState(0)
+  const [passRevealed, setPassRevealed] = React.useState(false)
+  const [passRegistered, setPassRegistered] = React.useState(false)
 
   // 如果本地有发布帖与当前 id 匹配，则加载并转换为详情结构
   useEffect(() => {
@@ -128,6 +134,20 @@ export default function ExploreDetailPage({ params }: { params: Promise<{ id?: s
     } catch (err) {}
   }, [id])
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PASS_STORAGE_KEY)
+      const num = raw ? parseInt(raw, 10) : NaN
+      const initial = Number.isFinite(num) ? num : 100
+      setPassCount(initial)
+      if (!raw) localStorage.setItem(PASS_STORAGE_KEY, String(initial))
+    } catch (e) {}
+    try {
+      const reg = localStorage.getItem(PASS_REGISTERED_KEY)
+      setPassRegistered(reg === 'true')
+    } catch (e) {}
+  }, [])
+
   const likeCountLabel = useMemo(() => `${post.likes} 赞`, [post.likes])
   const tipCountLabel = useMemo(() => `${post.tips} 人打赏`, [post.tips])
 
@@ -139,6 +159,52 @@ export default function ExploreDetailPage({ params }: { params: Promise<{ id?: s
   const tip = (amount: number) => {
     setPost((p: PostDetail) => ({ ...p, tips: p.tips + 1 }))
     message.success(`已打赏 ${amount} 元（Mock）`)
+  }
+
+  const onNomadPassContact = () => {
+    if (!passRegistered) {
+      Modal.confirm({
+        title: '尚未注册 Nomad Pass',
+        content: '前往 Me 页面注册后才能使用联系功能。是否现在前往？',
+        okText: '前往 Me',
+        cancelText: '取消',
+        onOk: () => { try { window.location.href = '/me' } catch {} },
+      })
+      return
+    }
+    if (passCount <= 0) {
+      message.warning('Nomad Pass 数量不足，无法联系')
+      return
+    }
+    Modal.confirm({
+      title: '使用 Nomad Pass 联系',
+      content: `是否需要消耗 1 个 Nomad Pass 进行联系？（当前剩余：${passCount}）`,
+      okText: '确定',
+      cancelText: '取消',
+      onOk: () => {
+        setPassCount((c: number) => {
+          const next = Math.max(0, c - 1)
+          try { localStorage.setItem(PASS_STORAGE_KEY, String(next)) } catch (e) {}
+          return next
+        })
+        setPassRevealed(true)
+        try {
+          const rawH = localStorage.getItem(PASS_HISTORY_KEY)
+          const arr = rawH ? JSON.parse(rawH) : []
+          arr.unshift({ id: `h${Date.now()}`, type: 'contact', postId: post.id, author: post.author, title: post.title, time: new Date().toLocaleString() })
+          localStorage.setItem(PASS_HISTORY_KEY, JSON.stringify(arr.slice(0, 50)))
+        } catch (e) {}
+        message.success('已消耗 1 个 Nomad Pass（Mock）。联系方式已显示')
+      },
+      onCancel: () => {
+        message.info('已取消联系')
+      },
+    })
+  }
+
+  const resolveContactInfo = (p: PostDetail) => {
+    const name = (p.author || 'Nomad').toLowerCase()
+    return `Telegram：@${name}_nomad · Email：${name}@example.com`
   }
 
   const addComment = () => {
@@ -210,10 +276,20 @@ export default function ExploreDetailPage({ params }: { params: Promise<{ id?: s
           <Space size={12} wrap>
             <Button type="primary" onClick={toggleLike}>{likeCountLabel}</Button>
             <Button onClick={() => tip(5)}>打赏 5</Button>
-            {/* 移除重复的打赏按钮 */}
+            <Button onClick={onNomadPassContact}>使用 Nomad Pass 联系</Button>
+            <Tag color={passRegistered ? 'green' : 'red'}>Pass {passRegistered ? '已注册' : '未注册'}</Tag>
+            <Tag>Nomad Pass ×{passCount}</Tag>
             <Tag color="blue" style={{ marginLeft: 8 }}>{tipCountLabel}</Tag>
           </Space>
         </Space>
+
+        {(post.tips > 0 || passRevealed) && (
+          <Space direction="vertical" size={8} style={{ width: '100%', padding: 16, background: 'var(--tg-theme-secondary-bg-color)', borderRadius: 8 }}>
+            <Title level={5} style={{ margin: 0 }}>联系方式</Title>
+            <Paragraph style={{ marginBottom: 0 }}>{resolveContactInfo(post)}</Paragraph>
+            <Paragraph type="secondary" style={{ marginBottom: 0 }}>（打赏或消耗 Pass 后显示，Mock）</Paragraph>
+          </Space>
+        )}
 
         {/* 评论 */}
         <Space direction="vertical" size={12} style={{ width: '100%', padding: 16, background: 'var(--tg-theme-secondary-bg-color)', borderRadius: 8 }}>

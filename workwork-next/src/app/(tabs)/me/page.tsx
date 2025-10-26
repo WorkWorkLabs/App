@@ -1,11 +1,15 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useWallet, useConnection } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
-import { Space, Card, Avatar, Typography, Tag, Button, Progress, Row, Col, List } from 'antd'
+import { Space, Card, Avatar, Typography, Tag, Button, Progress, Row, Col, List, message, Modal } from 'antd'
 const ACard: any = Card
+const PASS_STORAGE_KEY = 'WW_NOMAD_PASS_COUNT'
+const PASS_REGISTERED_KEY = 'WW_NOMAD_PASS_REGISTERED'
+const PASS_HISTORY_KEY = 'WW_NOMAD_PASS_HISTORY'
+const ORDERS_KEY = 'WW_ORDERS'
 
 function copy(text: string) {
   navigator.clipboard?.writeText(text)
@@ -50,7 +54,49 @@ export default function MePage() {
     setInvites((prev: Invite[]) => prev.map(i => i.code === code ? { ...i, status: 'joined' } : i))
   }
   const joinedCount = (invites as any[]).filter((i: any) => i.status === 'joined').length
-
+  const [passCount, setPassCount] = useState(0)
+  const [passRegistered, setPassRegistered] = useState(false)
+  const [passHistory, setPassHistory] = useState([] as any[])
+  // 初始化 Nomad Pass 与注册状态、历史：默认 100（Mock）
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PASS_STORAGE_KEY)
+      const num = raw ? parseInt(raw, 10) : NaN
+      const initial = Number.isFinite(num) ? num : 100
+      setPassCount(initial)
+      if (!raw) localStorage.setItem(PASS_STORAGE_KEY, String(initial))
+    } catch {}
+    try {
+      const reg = localStorage.getItem(PASS_REGISTERED_KEY)
+      setPassRegistered(reg === 'true')
+    } catch {}
+    try {
+      const rawH = localStorage.getItem(PASS_HISTORY_KEY)
+      const arr = rawH ? JSON.parse(rawH) : []
+      setPassHistory(arr)
+    } catch {}
+  }, [])
+  const resetPassCount = () => {
+    const next = 100
+    setPassCount(next)
+    try { localStorage.setItem(PASS_STORAGE_KEY, String(next)) } catch {}
+    message.success('Nomad Pass reset to 100 (Mock)')
+  }
+  const registerPass = () => {
+    setPassRegistered(true)
+    try { localStorage.setItem(PASS_REGISTERED_KEY, 'true') } catch {}
+    message.success('Nomad Pass registered (Mock)')
+  }
+  const unregisterPass = () => {
+    setPassRegistered(false)
+    try { localStorage.setItem(PASS_REGISTERED_KEY, 'false') } catch {}
+    message.info('Nomad Pass unregistered (Mock)')
+  }
+  const clearHistory = () => {
+    setPassHistory([])
+    try { localStorage.setItem(PASS_HISTORY_KEY, JSON.stringify([])) } catch {}
+    message.success('Nomad Pass usage history cleared')
+  }
   const [avatarExists, setAvatarExists] = React.useState(false)
   const [avatarDataUrl, setAvatarDataUrl] = React.useState(null as string | null)
   const fileInputRef = React.useRef(null as HTMLInputElement | null)
@@ -204,6 +250,27 @@ export default function MePage() {
     try { localStorage.removeItem('me-avatar-dataurl') } catch {}
     setAvatarDataUrl(null)
   }
+
+  type Order = { id: string; title: string; price: number; currency: string; status: string; createdAt: number; buyer?: string; courseId?: string }
+  const [ordersOpen, setOrdersOpen] = useState(false)
+  const [pendingOrders, setPendingOrders] = useState([] as Order[])
+  const loadPending = () => {
+    try {
+      const raw = localStorage.getItem(ORDERS_KEY)
+      const arr = raw ? JSON.parse(raw) : []
+      const list = (arr as any[]).filter((o: any) => o.status === 'pending_payment')
+      setPendingOrders(list)
+    } catch {
+      setPendingOrders([])
+    }
+    setOrdersOpen(true)
+  }
+  const clearOrders = () => {
+    try { localStorage.removeItem(ORDERS_KEY) } catch {}
+    setPendingOrders([])
+    message.success('Local orders cleared (Mock)')
+  }
+
   return (
     <div className="page" id="me">
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -276,10 +343,32 @@ export default function MePage() {
 
         <ACard title="🎟️ WorkWork Pass">
           <Typography.Text type="secondary">For contact scenarios and task bounties; consumed per use</Typography.Text>
-          <Space style={{ marginTop: 8 }}>
-            <Tag>Status: Unregistered</Tag>
+          <Space style={{ marginTop: 8 }} wrap>
+            <Tag color={passRegistered ? 'green' : 'red'}>Status: {passRegistered ? 'Registered' : 'Unregistered'}</Tag>
+            <Tag color="gold">Nomad Pass: {passCount}</Tag>
+            {passRegistered ? (
+              <Button onClick={unregisterPass}>Unregister</Button>
+            ) : (
+              <Button type="primary" onClick={registerPass}>Register</Button>
+            )}
             <Button onClick={() => alert('Purchase (coming soon)')}>Purchase</Button>
+            <Button onClick={resetPassCount}>Reset (100, Mock)</Button>
           </Space>
+          {passHistory && passHistory.length > 0 && (
+            <div style={{ marginTop: 12 }}>
+              <Typography.Text strong>Nomad Pass Usage History (Recent)</Typography.Text>
+              <List
+                size="small"
+                dataSource={passHistory.slice(0, 5)}
+                renderItem={(h: any) => (
+                  <List.Item>
+                    <Typography.Text>{h.time} · Contact {h.author} ({h.title})</Typography.Text>
+                  </List.Item>
+                )}
+              />
+              <Button size="small" onClick={clearHistory}>Clear History</Button>
+            </div>
+          )}
         </ACard>
 
         <ACard title="🪙 Points System">
@@ -353,7 +442,7 @@ export default function MePage() {
         <ACard title="My Orders">
           <Row gutter={[12, 12]}>
             <Col xs={12} sm={12} md={6} lg={6}>
-              <Button block onClick={() => alert('View pending payment orders')}>Pending Payment</Button>
+              <Button block onClick={loadPending}>Pending Payment</Button>
             </Col>
             <Col xs={12} sm={12} md={6} lg={6}>
               <Button block onClick={() => alert('View pending review orders')}>Pending Review</Button>
@@ -370,6 +459,34 @@ export default function MePage() {
         <ACard title="👣 Footprint">
           <Typography.Text type="secondary">Coming soon</Typography.Text>
         </ACard>
+      <Modal
+          title="Pending Payment"
+          open={ordersOpen}
+          onCancel={() => setOrdersOpen(false)}
+          footer={(
+            <Space>
+              <Button onClick={() => setOrdersOpen(false)}>Close</Button>
+              <Button danger onClick={clearOrders}>Clear (Mock)</Button>
+            </Space>
+          )}
+        >
+          <List
+            dataSource={pendingOrders}
+            renderItem={(o: any) => (
+              <List.Item>
+                <Space direction="vertical" size={2} style={{ width: '100%' }}>
+                  <Space style={{ justifyContent: 'space-between', width: '100%' }}>
+                    <Typography.Text>{o.title}</Typography.Text>
+                    <Tag color="gold">{o.price} {o.currency}</Tag>
+                  </Space>
+                  <Typography.Text type="secondary">Order ID: {o.id}</Typography.Text>
+                  <Typography.Text type="secondary">Created At: {new Date(o.createdAt).toLocaleString()}</Typography.Text>
+                  <Typography.Text type="secondary">Status: Awaiting seller confirmation</Typography.Text>
+                </Space>
+              </List.Item>
+            )}
+          />
+        </Modal>
       </Space>
     </div>
   )

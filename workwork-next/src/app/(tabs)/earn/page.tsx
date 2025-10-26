@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type Task = { icon: string; title: string; reward: number }
 
@@ -9,6 +10,7 @@ const TASKS: Record<'popular' | 'onchain' | 'invite', Task[]> = {
     { icon: 'UP', title: 'Post a Story', reward: 60 },
     { icon: '聊', title: 'Add a nomad as a friend', reward: 60 },
     { icon: '名', title: 'Complete your profile', reward: 60 },
+    { icon: '审', title: 'Submit the activity and review and confirm', reward: 60 },
   ],
   onchain: [
     { icon: '链', title: 'Make an on-chain deposit', reward: 40 },
@@ -18,6 +20,8 @@ const TASKS: Record<'popular' | 'onchain' | 'invite', Task[]> = {
     { icon: 'SIM', title: 'Purchase Solana SIM 1-month plan', reward: 300 },
     { icon: 'ID', title: 'Buy an SNS ID domain', reward: 200 },
     { icon: 'Gib', title: 'Browse jobs on Gibwork', reward: 60 },
+    { icon: 'DeFi', title: 'Pledge assets to the Solana DeFi protocol', reward: 220 },
+    { icon: 'Card', title: 'Activate Solayer payment card', reward: 240 },
   ],
 }
 
@@ -27,7 +31,14 @@ export default function EarnPage() {
   const wwTotal = 31615
   const claimCount = 21
 
-  const onAction = (task: Task) => alert(`Perform task: ${task.title}`)
+  const router = useRouter()
+  const onAction = (task: Task) => {
+    if (task.title === 'Post a Story') {
+      router.push('/explore?open=publish')
+      return
+    }
+    alert(`Perform task: ${task.title}`)
+  }
 
   const list: Task[] = TASKS[tab as 'popular' | 'onchain' | 'invite'] ?? []
 

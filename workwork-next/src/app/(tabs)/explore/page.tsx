@@ -45,6 +45,16 @@ export default function ExplorePage() {
     document.addEventListener('ww-open-publish', handler as any)
     return () => document.removeEventListener('ww-open-publish', handler as any)
   }, [])
+  
+  // 通过查询参数 ?open=publish 访问时，自动打开发布浮窗
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
+      if (params.get('open') === 'publish') {
+        setPublishOpen(true)
+      }
+    } catch (err) {}
+  }, [])
 
   // 首次加载读取本地存储的已发布帖子
   useEffect(() => {
@@ -89,12 +99,12 @@ export default function ExplorePage() {
             <div className="tg-grid-title">Taipei</div><div className="tg-grid-subtitle">Cuisine</div>
           </div>
           <div className="tg-grid-item">
-            <img className="tg-grid-thumb" src="https://picsum.photos/seed/seoul-scenery/600/360" alt="Seoul Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
-            <div className="tg-grid-title">Seoul</div><div className="tg-grid-subtitle">Trendy</div>
+            <img className="tg-grid-thumb" src="https://picsum.photos/seed/seoul-scenery/600/360" alt="Ho Chi Minh Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">Ho Chi Minh</div><div className="tg-grid-subtitle">Trendy</div>
           </div>
           <div className="tg-grid-item">
-            <img className="tg-grid-thumb" src="https://picsum.photos/seed/singapore-scenery/600/360" alt="Singapore Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
-            <div className="tg-grid-title">Singapore</div><div className="tg-grid-subtitle">Efficient</div>
+            <img className="tg-grid-thumb" src="https://picsum.photos/seed/singapore-scenery/600/360" alt="Medellin Scenery" style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8 }} />
+            <div className="tg-grid-title">Medellin</div><div className="tg-grid-subtitle">Efficient</div>
           </div>
         </div>
       </div>
@@ -188,34 +198,34 @@ export default function ExplorePage() {
       <div className="tg-form-section">
         <div className="tg-form-header">Visa/Accommodation Top Picks</div>
         <div className="tg-grid">
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Visa Hotspots</div><div className="tg-grid-subtitle">Thailand/Indonesia/Singapore</div></div>
+          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Visa Hotspots</div><div className="tg-grid-subtitle">Thailand/Indonesia/Medellin</div></div>
           <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Accommodation Hotspots</div><div className="tg-grid-subtitle">Bangkok/Chiang Mai/Bali</div></div>
           <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Best Value</div><div className="tg-grid-subtitle">Taipei/Chiang Mai/Ho Chi Minh</div></div>
-          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Coworking Spaces</div><div className="tg-grid-subtitle">Chiang Mai/Singapore/Seoul</div></div>
+          <div className="tg-grid-item"><div className="tg-grid-icon"></div><div className="tg-grid-title">Coworking Spaces</div><div className="tg-grid-subtitle">Chiang Mai/Medellin/Ho Chi Minh</div></div>
         </div>
       </div>
 
       {/* 发布帖子浮窗 */}
       <Modal
-        title="发布帖子"
+        title="Publish Post"
         open={publishOpen}
         onOk={handlePublish}
         onCancel={() => setPublishOpen(false)}
-        okText="发布"
-        cancelText="取消"
+        okText="Publish"
+        cancelText="Cancel"
       >
         <Form form={form} layout="vertical">
-          <Form.Item label="标题" name="title" rules={[{ required: true, message: '请输入标题' }]}>
-            <Input placeholder="例如：一个月在台北的生活" />
+          <Form.Item label="Title" name="title" rules={[{ required: true, message: 'Please enter a title' }]}>
+            <Input placeholder="e.g., A month living in Taipei" />
           </Form.Item>
-          <Form.Item label="地点" name="location">
-            <Input placeholder="例如：台北" />
+          <Form.Item label="Location" name="location">
+            <Input placeholder="e.g., Taipei" />
           </Form.Item>
-          <Form.Item label="简述" name="caption">
-            <Input placeholder="一句话简介" />
+          <Form.Item label="Summary" name="caption">
+            <Input placeholder="One-line summary" />
           </Form.Item>
-          <Form.Item label="正文" name="body" rules={[{ required: true, message: '请输入正文' }]}>
-            <Input.TextArea rows={4} placeholder="分享你的经历..." />
+          <Form.Item label="Body" name="body" rules={[{ required: true, message: 'Please enter the body' }]}>
+            <Input.TextArea rows={4} placeholder="Share your experience..." />
           </Form.Item>
         </Form>
       </Modal>
